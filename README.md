@@ -1,4 +1,4 @@
-# burpsuite_pro_v2022.8.5 Installations: 
+# Kali Linux BurpSuite_pro_v2022.8.5 Installations: 
 
 # Auto install:
 
