@@ -1,6 +1,6 @@
 #!/bin/bash
 
-    # execute Keygenerator
+  # Execute Keygenerator
     echo 'Starting Keygenerator'
     (java -jar keygen.jar) &
     sleep 2s
@@ -13,4 +13,4 @@
     (./Burp)
 else
     echo "Execute Command as Root User"
-    exit
+exit
