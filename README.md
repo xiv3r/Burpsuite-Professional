@@ -8,7 +8,7 @@
 
       cd burpsuite_pro_v2022.8.5
 
-      bash burp-install.sh
+      bash Install.sh
 
 
 
