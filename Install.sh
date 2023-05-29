@@ -1,7 +1,6 @@
 #!/bin/bash
 
-if [[ $EUID -eq 0 ]]; then
-    Download Burp Suite Profesional Latet Version
+    # Download Burp Suite Profesional Latet Version
     echo 'Downloading Burp Suite Professional v2022.8.5 ....'
     Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2022.8.5&type=Jar"
     wget "$Link" -O burpsuite_pro_v2022.8.5.jar --quiet --show-progress
@@ -21,4 +20,3 @@ if [[ $EUID -eq 0 ]]; then
 else
     echo "Run as Root"
     exit
-fi
