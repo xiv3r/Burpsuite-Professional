@@ -1,4 +1,6 @@
-# Kali Linux BurpSuite_pro_v2022.8.5 Installations: 
+                                                     # Kali Linux BurpSuite_pro_v2022.8.5 Installations: 
+                                                  
+                                                  
 
 # Auto install:
 
@@ -12,9 +14,9 @@ bash burp-install.sh
 
 # Manual Key Setup:
 
-bash burp.sh
+bash Burp.sh
 
 
 # RUN:
 
-bash ./burp1
+bash ./Burp
