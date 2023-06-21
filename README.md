@@ -10,7 +10,7 @@
 # Manual Key Setup:
      bash Burp.sh
 
-#Notes:
+# Notes:
     Copy the license from loader to burpsuite > manual activation > copy burpsuite request key to loader request >  copy response to burpsuite paste key > voila!
      
 
