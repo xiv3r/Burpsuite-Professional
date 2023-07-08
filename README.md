@@ -1,4 +1,8 @@
 # Kali Linux BurpSuite_pro_v2022.8.5 with Permanent License key Installations: 
+
+Link to latest burpsuite pro 2023.6.2 and soon: 
+
+https://github.com/xiv3r/BurpSuite-Pro-Latest
                                                 
 # Auto install:
     git clone https://github.com/xiv3r/burpsuite_pro_v2022.8.5.git
