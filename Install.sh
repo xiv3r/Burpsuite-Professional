@@ -4,12 +4,11 @@
     echo 'Downloading Burp Suite Professional v2022.8.5 ....'
     Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2022.8.5&type=Jar"
     wget "$Link" -O burpsuite_pro_v2022.8.5.jar --quiet --show-progress
-    sleep 2s
 
   # Execute Key Generator
     echo 'Starting Keygenerator'
     (java -jar keygen.jar) &
-    sleep 3s
+    sleep 2s
     
   # Execute Burp Suite Professional with Keyloader
     echo 'Executing Burp Suite Professional with Keyloader'
