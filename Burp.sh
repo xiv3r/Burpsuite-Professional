@@ -11,6 +11,3 @@
     chmod +x Burp
     cp Burp /bin/Burp 
     (./Burp)
-else
-    echo "Execute Command as Root User"
-exit
