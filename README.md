@@ -4,10 +4,10 @@
 
 <br></br>
 
-- #### `Update` 👉 [Latest Burpsuite Professional](https://github.com/xiv3r/BurpSuite-Pro-Latest)
+- #### `Updates` 👉 [Latest Burpsuite Professional](https://github.com/xiv3r/BurpSuite-Pro-Latest)
 
                                            
-- Install:
+- ### Install:
 
       git clone https://github.com/xiv3r/Burpsuite-Professional-v2022.8.5.git
     
@@ -17,7 +17,7 @@
 
 
 
-- Manual Install:
+- ### Manual Install:
 
       cd Burpsuite-Professional-v2022.8.5
   
@@ -27,7 +27,7 @@
      
 https://github.com/xiv3r/burpsuite_pro_v2022.8.5/assets/117867334/f0b9ab66-500a-4ba8-af7e-3eed67a2cbe6
 
-- RUN:
+- ### Run:
 
       cd Burpsuite-Professional-v2022.8.5
 
