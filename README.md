@@ -3,19 +3,47 @@
 </p>
 
 <br></br>
+
+- ### Requirements:
+
+      sudo apt update
+    
+      sudo apt install curl git wget openjdk-23-jdk openjdk-23-jre
+    
                                            
-- ### Install:
+- ### Auto Install:
 
-     
+      sudo -i
+
+      curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 
 
-- ### Manual Install:
+- ### Run (root)
 
+      burpsuitepro
+
+
+- ### NoneRoot Terminal:
+
+      burpsuitepro
+
+      java -jar /usr/share/burpsuitepro/loader.jar
+
+
+- ### Update [optional]
+
+      sudo -i
+
+      curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
+
+- ### Switching Java Version
+
+      update-alternatives --config java
+
+- ### Setup License:
       
 - Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite
      
 https://github.com/xiv3r/burpsuite_pro_v2022.8.5/assets/117867334/f0b9ab66-500a-4ba8-af7e-3eed67a2cbe6
-
-- ### Run:
 
      
