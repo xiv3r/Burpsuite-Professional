@@ -27,6 +27,8 @@
 
       burpsuitepro
 
+    (New terminal CTRL + N)
+  
       java -jar /usr/share/burpsuitepro/loader.jar
 
 
