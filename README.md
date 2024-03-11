@@ -30,7 +30,7 @@
       burpsuitepro
 
 
-- ### NoneRoot Terminall:
+- ### NoneRoot Terminal:
 
       java -jar /usr/share/burpsuitepro/loader.jar
   
