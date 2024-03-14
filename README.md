@@ -15,32 +15,28 @@
 
       sudo apt update
     
-      sudo apt install curl git wget openjdk-23-jdk openjdk-23-jre
+      sudo apt install curl git wget openjdk-17-jdk openjdk-17-jre openjdk-23-jdk openjdk-23-jre -y
     
                                            
-- ### Auto Install:
-
-      sudo -i
+- ### Auto Install (root)
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 
-
-- ### Run (root)
+- ### Run(root)
 
       burpsuitepro
 
 
-- ### NoneRoot Terminal:
+- ### NoneRoot Install
 
       java -jar /usr/share/burpsuitepro/loader.jar
   
     (New terminal CTRL + N)
 
-      burpsuitepro
+ Run: `burpsuitepro`
+
 
 - ### Update [optional]
-
-      sudo -i
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
 
@@ -89,7 +85,7 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
 
 <details><summary>Credits:</summary>
       
-* `loader.jar` 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
-* `Modified from Cyb3rzest` [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
+* loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
+* Modified from [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
 </details>
 
