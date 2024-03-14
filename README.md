@@ -60,13 +60,16 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
 
 
    
-- Make new directory `Burp` in `C Drive` for faster access.
+- Make a `Burp` directory name in `C Drive` for faster access.
 
-- Download install.ps1 and Copy files to `C:\Burp`
+- Download [install.ps1](https://codeload.github.com/xiv3r/Burpsuite-Professional/zip/refs/heads/main) and extract move the file inside to `C:\Burp`
 
-- Open `Powershell` and execute below command to set Script Execution Policy.
+- Open `Powershell` as administrator and execute below command to set Script Execution Policy.
+
 
       Set-ExecutionPolicy -ExecutionPolicy bypass -Scope process
+
+- Inside PowerShell go to `cd C:\Burp`
 
 - Now Execute `install.ps1` file in Powershell to Complete Installation.
 
