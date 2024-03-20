@@ -11,6 +11,10 @@
  
 <br></br>
 
+<h1 align="center"> Linux Installation </h1>
+
+<br></br>
+
 - ### Requirements:
 
       sudo apt update
