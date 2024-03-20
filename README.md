@@ -43,6 +43,13 @@
 - ### Switching Java Version
 
       update-alternatives --config java
+  
+- ### Create a Launcher
+
+     right click desktop and create launcher
+
+<img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/launcher.jpg">
+
 
 - ### Setup License:
 
