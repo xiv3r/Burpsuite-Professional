@@ -44,6 +44,12 @@
 
       update-alternatives --config java
   
+- ### Setup License:
+
+https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
+
+Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite
+
 - ### Create a Launcher
 
      right click desktop and create launcher
@@ -51,11 +57,6 @@
 <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/launcher.jpg">
 
 
-- ### Setup License:
-
-https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
-
-Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite
      
 # <h1 align="center"> Windows Installation: </h1>
 
