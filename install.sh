@@ -8,7 +8,7 @@
 # Download Burpsuite Professional Latest.
     echo 'Downloading Burpsuite Professional Latest...'
     mkdir -p /usr/share/burpsuitepro
-    cp loader.jar /usr/share/burpsuitepro
+    cp -r loader.jar /usr/share/burpsuitepro
     cd /usr/share/burpsuitepro/
     html=$(curl -s https://portswigger.net/burp/releases)
     version=$(echo $html | grep -Po '(?<=/burp/releases/professional-community-)[0-9]+\-[0-9]+\-[0-9]+' | head -n 1)
