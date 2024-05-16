@@ -18,7 +18,7 @@
 
 # Execute Key Generator.
     echo 'Starting Key Generator'
-    (java -jar /usr/share/burpsuitepro/loader.jar) &
+    (java -jar /home/*/Burpsuite-Professional/loader.jar) &
     sleep 2s
 
 # Execute Burp Suite Professional
