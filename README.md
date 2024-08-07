@@ -37,16 +37,16 @@
   
     (New terminal CTRL + N)
 
- Run: `burpsuitepro`
+- ### Run: `burpsuitepro`
 
 
 - ### Update [optional]
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
 
-- ### Switching Java Version
+- ### Change Java Version
 
-      update-alternatives --config java
+      sudo update-alternatives --config java
   
 - ### Setup License:
 
