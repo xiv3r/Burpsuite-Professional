@@ -8,13 +8,13 @@
    
    sleep 1s &
    # Copy loader.jar
-   cd /home/*/Burpsuite-Professional/
+   cd /home/*/Burpsuite-Professional
    cp loader.jar /usr/share/burpsuitepro
    
    sleep 1s &
    # Download Burpsuitepro
    echo 'Downloading Burpsuite Professional'
-   cd /usr/share/burpsuitepro/
+   cd /usr/share/burpsuitepro
    html=$(curl -s https://portswigger.net/burp/releases)
    version=$(echo $html | grep -Po '(?<=/burp/releases/professional-community-)[0-9]+\-[0-9]+\-[0-9]+' | head -n 1)
    Link="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar&version=&"
