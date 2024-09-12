@@ -58,7 +58,7 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
 
      right click desktop and create launcher
 
-<img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/launcher.jpg">
+<img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
 
 
      
