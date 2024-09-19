@@ -22,7 +22,7 @@
       sudo apt install curl git wget openjdk-17-jdk openjdk-17-jre openjdk-23-jdk openjdk-23-jre -y
     
                                            
-- ### Auto Install (root)
+- ### Auto Install(root)
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 
@@ -31,16 +31,14 @@
       burpsuitepro
 
 
-- ### NoneRoot Install
+- ### User Terminal (none root install)
 
       java -jar /usr/share/burpsuitepro/loader.jar
   
-    (New terminal CTRL + N)
-
-- ### Run: `burpsuitepro`
+- Open a New terminal (CTRL + N) and Run: `burpsuitepro`
 
 
-- ### Update [optional]
+- ### Update(root)[Optional]
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
 
