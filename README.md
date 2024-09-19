@@ -31,7 +31,7 @@
       burpsuitepro
 
 
-- ### User Terminal (none root install)
+- ### User Terminal License Activation 
 
       java -jar /usr/share/burpsuitepro/loader.jar
   
@@ -42,7 +42,7 @@
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
 
-- ### Change Java Version
+- ### Java Version 
 
       sudo update-alternatives --config java
   
