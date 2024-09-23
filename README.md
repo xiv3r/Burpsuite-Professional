@@ -15,12 +15,15 @@
 
 <br></br>
 
-- ### Requirements:
+- ### Dependencies
 
       sudo apt update
     
-      sudo apt install curl git wget openjdk-17-jdk openjdk-17-jre openjdk-23-jdk openjdk-23-jre -y
-    
+      sudo apt install curl git wget openjdk-17-jre openjdk-21-jre openjdk-22-jre openjdk-23-jre openjdk-24-jre -y
+
+- ### Java Version 
+
+      sudo update-alternatives --config java
                                            
 - ### Auto Install(root)
 
@@ -42,10 +45,6 @@
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
 
-- ### Java Version 
-
-      sudo update-alternatives --config java
-  
 - ### Setup License:
 
 https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
