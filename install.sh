@@ -5,7 +5,6 @@
    sudo apt update ; sudo apt install curl git wget openjdk-17-jre openjdk-21-jre openjdk-23-jre openjdk-24-jre -y
 
 # Cloning
-   echo 'Cloning Xiv3r Burpsuite Professional'
    git clone https://github.com/xiv3r/Burpsuite-Professional.git 
  
 # Download Burpsuite Professional Latest.
