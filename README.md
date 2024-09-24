@@ -29,28 +29,24 @@
 
 - ### Update [Optional]
 
-      curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
-
-- ### Setup License:
+      sudo sh update.sh
+  
+- ### Setup Licenses
 
 https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
 
-Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite
+Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
 
 - ### Create a Launcher
 
-     right click the desktop -> create a launcher add Burpsuite Professional name, add `burpsuitepro` command and select burpsuite community icon
+     right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
 
 <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
-
-     
-     
+        
 # <h1 align="center"> Windows Installation: </h1>
 
 <br>
-
-
-   
+ 
 - Make a `Burp` directory name in `C Drive` for faster access.
 
 - Download [install.ps1](https://codeload.github.com/xiv3r/Burpsuite-Professional/zip/refs/heads/main) and extract move the file inside to `C:\Burp`
