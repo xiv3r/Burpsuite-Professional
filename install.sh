@@ -2,18 +2,18 @@
 
 # Installing Dependencies
    echo 'Installing Dependencies'
-   sudo apt update ; sudo apt install curl git wget openjdk-17-jdk openjdk-17-jre openjdk-23-jdk openjdk-23-jre -y
+   sudo apt update ; sudo apt install curl git wget openjdk-17-jre openjdk-21-jre openjdk-23-jre openjdk-24-jre -y
 
 # Cloning
    echo 'Cloning Xiv3r Burpsuite Professional'
-   mkdir -p /home/*/Burpsuite-Professional
-   cd /home/*/Burpsuite-Professional
+   mkdir -p /home/*/
+   cd /home/*/
    git clone https://github.com/xiv3r/Burpsuite-Professional.git 
  
 # Download Burpsuite Professional Latest.
     echo 'Downloading Burpsuite Professional Latest...'
+    cd /home/*/Burpsuite-Professional
     mkdir -p /usr/share/burpsuitepro
-    cd /usr/share/burpsuitepro
     cp -r /home/*/Burpsuite-Professional/loader.jar /usr/share/burpsuitepro
     html=$(curl -s https://portswigger.net/burp/releases)
     version=$(echo $html | grep -Po '(?<=/burp/releases/professional-community-)[0-9]+\-[0-9]+\-[0-9]+' | head -n 1)
@@ -23,7 +23,6 @@
 
 # Execute Key Generator.
     echo 'Starting Key Generator'
-    cd /home/*/Burpsuite-Professional
     (java -jar loader.jar) &
     sleep 2s
 
