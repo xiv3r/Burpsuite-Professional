@@ -15,33 +15,19 @@
 
 <br></br>
 
-- ### Dependencies
-
-      sudo apt update
-    
-      sudo apt install curl git wget openjdk-17-jre openjdk-21-jre openjdk-22-jre openjdk-23-jre openjdk-24-jre -y
-
 - ### Java Version 
 
       sudo update-alternatives --config java
                                            
-- ### Auto Install(root)
+- ### Auto Install
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 
-- ### Run(root)
+- ### Run
 
       burpsuitepro
 
-
-- ### User Terminal License Activation 
-
-      java -jar /usr/share/burpsuitepro/loader.jar
-  
-- Open a New terminal (CTRL + N) and Run: `burpsuitepro`
-
-
-- ### Update(root)[Optional]
+- ### Update [Optional]
 
       curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/update.sh | sudo bash
 
