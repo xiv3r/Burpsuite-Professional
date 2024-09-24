@@ -15,7 +15,7 @@
 
 <br></br>
 
-- ### Java Version 
+- ### Java Version [ stable: openjdk-21-jre ] 
 
       sudo update-alternatives --config java
                                            
