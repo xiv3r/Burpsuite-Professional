@@ -6,14 +6,15 @@
 
 # Cloning
    echo 'Cloning Xiv3r Burpsuite Professional'
-   git clone https://github.com/xiv3r/Burpsuite-Professional.git     
+   mkdir -p /home/*/Burpsuite-Professional
    cd /home/*/Burpsuite-Professional
+   git clone https://github.com/xiv3r/Burpsuite-Professional.git 
  
 # Download Burpsuite Professional Latest.
     echo 'Downloading Burpsuite Professional Latest...'
     mkdir -p /usr/share/burpsuitepro
-    cp -r /home/*/Burpsuite-Professional/loader.jar /usr/share/burpsuitepro
     cd /usr/share/burpsuitepro
+    cp -r /home/*/Burpsuite-Professional/loader.jar /usr/share/burpsuitepro
     html=$(curl -s https://portswigger.net/burp/releases)
     version=$(echo $html | grep -Po '(?<=/burp/releases/professional-community-)[0-9]+\-[0-9]+\-[0-9]+' | head -n 1)
     Link="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar&version=&"
@@ -22,7 +23,8 @@
 
 # Execute Key Generator.
     echo 'Starting Key Generator'
-    (java -jar /home/*/Burpsuite-Professional/loader.jar) &
+    cd /home/*/Burpsuite-Professional
+    (java -jar loader.jar) &
     sleep 2s
 
 # Execute Burp Suite Professional
