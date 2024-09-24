@@ -2,7 +2,7 @@
 
 # Installing Dependencies
    echo 'Installing Dependencies'
-   sudo apt update ; sudo apt install curl git wget openjdk-17-jre openjdk-21-jre openjdk-23-jre openjdk-24-jre -y
+   sudo apt update ; sudo apt install curl git wget openjdk-21-jre -y
 
 # Cloning
    git clone https://github.com/xiv3r/Burpsuite-Professional.git 
