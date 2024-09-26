@@ -74,9 +74,12 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
 
       C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
 
-<details><summary>Credits:</summary>
-      
-* loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
-* Modified from [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
-</details>
+<h1 align="center" >
+ 
+ <details><summary>Credits:</summary>
 
+* Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
+* Modified 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
+
+</details>
+</h1>
