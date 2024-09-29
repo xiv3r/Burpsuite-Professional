@@ -29,7 +29,8 @@
 
 - ### Update [Optional]
 
-      cd ; sudo curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sh
+      cd
+      sudo curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sh
   
 - ### Setup Licenses
 
