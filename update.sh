@@ -2,7 +2,8 @@
 
    # Remove old files
    echo 'Removing Old Files...'
-   sudo rm -rf /bin/burpsuitepro
+   sudo rm .git
+   sudo rm /bin/burpsuitepro
    rm burpsuitepro
    sleep 1s &
    
