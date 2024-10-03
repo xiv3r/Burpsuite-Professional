@@ -17,12 +17,12 @@
     wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
 
 # Execute Key Generator.
-    echo 'Starting Key Generator'
+    echo 'Starting Key loader.jar...'
     (java -jar loader.jar) &
     sleep 2s
 
 # Execute Burp Suite Professional
-    echo 'Executing Burpsuite Professional with Key Generator'
+    echo 'Executing Burpsuite Professional...'
     echo "java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:$(pwd)/loader.jar -noverify -jar $(pwd)/burpsuite_pro_v$version.jar &" > burpsuitepro
     chmod +x burpsuitepro
     sudo cp -r burpsuitepro /bin/burpsuitepro
