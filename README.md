@@ -21,7 +21,7 @@
                                            
 - ### Auto Install
 
-      sudo apt update ; sudo apt install curl -y ; curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo sh
+      curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo sh
 
 - ### Run
 
