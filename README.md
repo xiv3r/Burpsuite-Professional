@@ -16,37 +16,38 @@
 <br></br>
 
 - ### Java Version [ stable: openjdk-21-jre ] 
-
-      sudo update-alternatives --config java
-                                           
+```sh
+sudo update-alternatives --config java
+```               
 - ### Auto Install
-
-      curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo sh
-
+```sh
+wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo sh
+```
 - ### Run
-
-      burpsuitepro
+```sh
+burpsuitepro
+```
 
 - ### Update [Optional]
-
-      cd
-  <br>
-   
-      curl https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo sh
-  
+```sh
+cd
+```
+```sh 
+wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo sh
+```
 - ### Setup Licenses
 
 https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
 
 Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
 
-- ### Create a Launcher
+- ### Create a Launcher (xfce)
 
      right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
 
 <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
         
-# <h1 align="center"> Windows Installation: </h1>
+# <h1 align="center"> Windows Installation</h1>
 
 <br>
  
