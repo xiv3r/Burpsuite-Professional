@@ -39,16 +39,21 @@ wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/he
 ```
 - ### Setup Licenses
 
+<div align="center">
+ 
 https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
-
+</div>
+ 
 Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
 
 - ### Create a Launcher (xfce)
 
      right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
 
-<img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
-        
+<div align="center">
+ <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
+</div>
+
 # <h1 align="center"> Windows Installation</h1>
 
 <br>
@@ -74,7 +79,10 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
 
 - Click there and choose the `burp-suite.ico` from `C:\Burp\`
 
-   ![image](https://user-images.githubusercontent.com/29830064/230825172-16c9cfba-4bca-46a4-86df-b352a4330b12.png)
+   <div align="center">
+    
+    <img src="https://user-images.githubusercontent.com/29830064/230825172-16c9cfba-4bca-46a4-86df-b352a4330b12.png">
+</div>
 
 - For Start Menu Entry, copy `Burp-Suite-Pro.vbs` file to 
 
@@ -82,7 +90,7 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
 
 <h1 align="center" >
  
- <details><summary>Credits:</summary>
+ <details><summary>Credits to:</summary>
 
 * Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
 * Modified 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
