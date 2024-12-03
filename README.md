@@ -32,10 +32,7 @@ burpsuitepro
 
 - ### Update [Optional]
 ```sh
-cd
-```
-```sh 
-wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo sh
+rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo sh
 ```
 - ### Setup Licenses
 
