@@ -14,7 +14,7 @@
   cd Burpsuite-Professional
     
     # URL containing the version
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=jar"
+Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=Jar"
 
 # Extract the version from the URL using grep and cut
 version=$(echo "$Link" | grep -oP "version=\K[0-9.]+")
