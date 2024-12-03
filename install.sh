@@ -19,12 +19,6 @@ Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=202
 # Extract the version from the URL using grep and cut
 version=$(echo "$Link" | grep -oP "version=\K[0-9.]+")
 
-# Check if the version was extracted successfully
-if [[ -z "$version" ]]; then
-  echo "Failed to extract the version from the URL."
-  exit 1
-fi
-
 # Download the file with the version in the output filename
 wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
 
