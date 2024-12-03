@@ -26,7 +26,7 @@ if [[ -z "$version" ]]; then
 fi
 
 # Download the file with the version in the output filename
-wget "$Link" -O "burpsuite_pro_v${version}.jar" --quiet --show-progress
+wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
 
 # Execute Key Generator.
     echo 'Starting Key loader.jar...'
