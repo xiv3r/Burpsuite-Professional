@@ -1,20 +1,32 @@
 #!/bin/bash
 
 # Installing Dependencies
-   echo 'Installing Dependencies'
+   echo 'Installing Dependencies...'
+ 
    sudo apt install git wget openjdk-21-jre -y
 
 # Cloning
    git clone https://github.com/xiv3r/Burpsuite-Professional.git 
  
 # Download Burpsuite Professional Latest.
-    echo 'Downloading Burpsuite Professional Latest...'
-    cd Burpsuite-Professional
-    html=$(curl -s https://portswigger.net/burp/releases)
-    version=$(echo $html | grep -Po '(?<=/burp/releases/professional-community-)[0-9]+\-[0-9]+\-[0-9]+' | head -n 1)
-    Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=&"
-    echo $version
-    wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
+  echo 'Downloading Burpsuite Professional Latest...'
+   
+  cd Burpsuite-Professional
+    
+    # URL containing the version
+Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=&"
+
+# Extract the version from the URL using grep and cut
+version=$(echo "$Link" | grep -oP "version=\K[0-9.]+")
+
+# Check if the version was extracted successfully
+if [[ -z "$version" ]]; then
+  echo "Failed to extract the version from the URL."
+  exit 1
+fi
+
+# Download the file with the version in the output filename
+wget "$Link" -O "burpsuite_pro_v${version}.jar" --quiet --show-progress
 
 # Execute Key Generator.
     echo 'Starting Key loader.jar...'
