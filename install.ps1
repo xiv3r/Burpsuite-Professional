@@ -34,13 +34,13 @@ if (Test-Path burpsuite_pro_v*.jar){
     if (((Get-Item burpsuite_pro_v*.jar).length/1MB) -lt 500 ){
         echo "`n`t`tFiles Seems to be corrupted `n`t`tDownloading Latest Burp Suite Professional ...."
 		$version = (Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/community/latest" -UseBasicParsing).Links.href | Select-String -Pattern "product=pro&amp;version=*" | Select-Object -First 1 | ForEach-Object { [regex]::Match($_, '\d+\.\d+\.\d+').Value }
-		wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=jar" -O "burpsuite_pro_v$version.jar"
+		wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=Jar" -O "burpsuite_pro_v$version.jar"
         echo "`nBurp Suite Professional is Downloaded.`n"
     }else {echo "File Looks fine. Lets proceed for Execution"}
 }else {
     echo "`n`t`tDownloading Latest Burp Suite Professional ...."
 	$version = (Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/community/latest" -UseBasicParsing).Links.href | Select-String -Pattern "product=pro&amp;version=*" | Select-Object -First 1 | ForEach-Object { [regex]::Match($_, '\d+\.\d+\.\d+').Value }
-	wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=jar" -O "burpsuite_pro_v$version.jar"
+	wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=Jar" -O "burpsuite_pro_v$version.jar"
     echo "`nBurp Suite Professional is Downloaded.`n"
 }
 
