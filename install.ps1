@@ -29,17 +29,8 @@ if (!($jre8)){
 }
 
 # Downloading Burp Suite Professional
-if (Test-Path burpsuite_pro_v*.jar){
-    echo "Burp Suite Professional JAR file is available.`nChecking its Integrity ...."
-    if (((Get-Item burpsuite_pro_v*.jar).length/1MB) -lt 500 ){
-        echo "`n`t`tFiles Seems to be corrupted `n`t`tDownloading Latest Burp Suite Professional ...."
-		$version = (Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/community/latest" -UseBasicParsing).Links.href | Select-String -Pattern "product=pro&amp;version=*" | Select-Object -First 1 | ForEach-Object { [regex]::Match($_, '\d+\.\d+\.\d+').Value }
-		wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=Jar" -O "burpsuite_pro_v$version.jar"
-        echo "`nBurp Suite Professional is Downloaded.`n"
-    }else {echo "File Looks fine. Lets proceed for Execution"}
-}else {
-    echo "`n`t`tDownloading Latest Burp Suite Professional ...."
-	$version = (Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/community/latest" -UseBasicParsing).Links.href | Select-String -Pattern "product=pro&amp;version=*" | Select-Object -First 1 | ForEach-Object { [regex]::Match($_, '\d+\.\d+\.\d+').Value }
+    echo "`n`t`tDownloading Latest Burp Suite Professional..."
+	$version = 2024.11.1
 	wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=Jar" -O "burpsuite_pro_v$version.jar"
     echo "`nBurp Suite Professional is Downloaded.`n"
 }
@@ -58,11 +49,6 @@ echo "Set WshShell = CreateObject(`"WScript.Shell`")" > Burp-Suite-Pro.vbs
 add-content Burp-Suite-Pro.vbs "WshShell.Run chr(34) & `"$pwd\Burp.bat`" & Chr(34), 0"
 add-content Burp-Suite-Pro.vbs "Set WshShell = Nothing"
 echo "`nBurp-Suite-Pro.vbs file is created."
-
-# Remove Additional files
-rm Linux_setup.sh
-del -Recurse -Force .\.github\
-
 
 # Lets Activate Burp Suite Professional with keygenerator and Keyloader
 echo "Reloading Environment Variables ...."
