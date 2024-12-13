@@ -30,7 +30,7 @@ if (!($jre8)){
 
 # Downloading Burp Suite Professional
     echo "`n`t`tDownloading Latest Burp Suite Professional..."
-	$version = 2024.11.1
+	$version = "2024.11.1"
 	wget "https://portswigger-cdn.net/burp/releases/download?product=pro&version=&type=Jar" -O "burpsuite_pro_v$version.jar"
     echo "`nBurp Suite Professional is Downloaded.`n"
 }
