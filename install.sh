@@ -1,3 +1,7 @@
+#Extra info:
+#
+# Versie handmatig aanpassen als je dit voor de 1ste keer uitvoert (regel 15)
+
 #!/bin/bash
 
 # Installing Dependencies
@@ -8,9 +12,9 @@ sudo apt install git wget openjdk-21-jre -y
 git clone https://github.com/xiv3r/Burpsuite-Professional.git 
 cd Burpsuite-Professional
 
-# Download Burpsuite Professional Latest.
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=Jar"
-version="2024.11.1"
+# Download Burpsuite Professional Latest (VERSIE AANPASSEN!!!!)
+Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.2&type=Jar"
+version="2024.11.2"
 
 echo "Downloading Burpsuite Professional v$version ..."
 
@@ -24,5 +28,5 @@ echo "Starting Key loader.jar..."
 echo "Executing Burpsuite Professional..."
 echo "java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:$(pwd)/loader.jar -noverify -jar $(pwd)/burpsuite_pro_v$version.jar &" > burpsuitepro
 chmod +x burpsuitepro
-cp burpsuitepro /bin/burpsuitepro
+cp burpsuitepro /usr/local/bin/burpsuitepro
 (./burpsuitepro)
