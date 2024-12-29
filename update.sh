@@ -3,7 +3,7 @@
 # Remove old files
 echo "Removing Old Files..."
 
-sudo rm -rf /bin/burpsuitepro
+sudo rm -rf /usr/local/bin/burpsuitepro
 
 # Installing Dependencies
 echo "Installing Dependencies..."
@@ -17,8 +17,8 @@ git clone https://github.com/xiv3r/Burpsuite-Professional.git
 cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=Jar"
-version="2024.11.1"
+Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.2&type=Jar"
+version="2024.11.2"
 
 echo "Downloading Burpsuite Professional v$version ..."
 
@@ -34,5 +34,5 @@ echo "Executing Burpsuite Professional..."
 
 echo "java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:$(pwd)/loader.jar -noverify -jar $(pwd)/burpsuite_pro_v$version.jar &" > burpsuitepro
 chmod +x burpsuitepro
-cp burpsuitepro /bin/burpsuitepro
+cp burpsuitepro /usr/local/bin/burpsuitepro
 (./burpsuitepro)
