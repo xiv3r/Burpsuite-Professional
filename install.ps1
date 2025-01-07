@@ -29,10 +29,11 @@ if (!($jre8)){
 }
 
 # Downloading Burp Suite Professional
-    echo "`n`t`tDownloading Latest Burp Suite Professional..."
-    $version = "2024.11.1"
-    Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar" -       OutFile "burpsuite_pro_v$version.jar"
-    echo "`nBurp Suite Professional is Downloaded.`n"
+echo "`n`t`tDownloading Latest Burp Suite Professional..."
+$version = "2024.11.1"
+Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar" `
+-OutFile "burpsuite_pro_v$version.jar"
+echo "`nBurp Suite Professional is Downloaded.`n"
 
 # Creating Burp.bat file with command for execution
 if (Test-Path burp.bat) {rm burp.bat}
