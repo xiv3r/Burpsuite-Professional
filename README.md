@@ -17,23 +17,34 @@
 
 <br></br>
 
-- ### Java Version [ stable: openjdk-21-jre ] 
-```sh
-sudo update-alternatives --config java
-```               
 - ### Auto Install
 ```sh
-wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo sh
+wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 ```
 - ### Run
 ```sh
 burpsuitepro
 ```
+<details><summary>
 
-- ### Update [Optional]
+### Update [Optional]
+</summary>
+
 ```sh
 cd && rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo sh
 ```
+</details>
+
+<details><summary>
+
+### Java Version [ stable: openjdk-21-jre ]
+</summary>
+
+```sh
+sudo update-alternatives --config java
+```               
+</details>
+
 - ### Setup Licenses
 
 <div align="center">
