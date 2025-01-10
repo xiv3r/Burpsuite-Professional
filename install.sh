@@ -11,7 +11,7 @@ cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
 version="2024.11.1"
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=Jar"
+Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
 
 
 # Download Burpsuite Professional
