@@ -11,12 +11,12 @@ echo "Installing Dependencies..."
 sudo apt update
 sudo apt install git wget openjdk-21-jre -y
 
-# Cloning
-git clone https://github.com/xiv3r/Burpsuite-Professional.git 
+# Cloning (alleen nodig als je opnieuw alles wilt binnenhalen)
+#git clone https://github.com/xiv3r/Burpsuite-Professional.git 
 
-cd Burpsuite-Professional
+cd /home/kali/Burpsuite-Professional
 
-# Download Burpsuite Professional Latest.
+# Download Burpsuite Professional Latest (Link en version nummers aanpassen naar nieuwere versie) - https://portswigger.net/burp/pro en ga naar downloads.
 Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.2&type=Jar"
 version="2024.11.2"
 
@@ -34,5 +34,5 @@ echo "Executing Burpsuite Professional..."
 
 echo "java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:$(pwd)/loader.jar -noverify -jar $(pwd)/burpsuite_pro_v$version.jar &" > burpsuitepro
 chmod +x burpsuitepro
-cp burpsuitepro /usr/local/bin/burpsuitepro
+sudo cp burpsuitepro /usr/local/bin/burpsuitepro
 (./burpsuitepro)
