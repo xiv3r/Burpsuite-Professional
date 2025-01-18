@@ -10,7 +10,8 @@ git clone https://github.com/xiv3r/Burpsuite-Professional.git
 cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
-version=$(curl -s https://portswigger.net/burp/releases/professional/latest | grep -o '[0-9]\+-[0-9]\+-[0-9]\+' | head -1 | tr '-' '.')
+#version=$(curl -s https://portswigger.net/burp/releases/professional/latest | grep -o '[0-9]\+-[0-9]\+-[0-9]\+' | head -1 | tr '-' '.')
+version=2024.11.1
 Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
 
 
