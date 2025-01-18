@@ -13,7 +13,6 @@ cd Burpsuite-Professional
 version=2024.11.2
 Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
 
-
 # Download Burpsuite Professional
 echo "Downloading Burpsuite Professional v$version ..."
 wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
