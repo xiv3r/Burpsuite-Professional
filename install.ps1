@@ -28,13 +28,13 @@ if (!($jre8)){
     $jre8
 }
 
-# First fetch the latest version info
-$latestVersion = (Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/professional/latest" -UseBasicParsing).BaseResponse.ResponseUri.Segments[-1]
-echo "`n`t`tDownloading Latest Burp Suite Professional version $latestVersion"
+# Downloading Burp Suite Professional
 
-Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$latestVersion&type=Jar" `
-    -OutFile "burpsuite_pro_v$latestVersion.jar"
-echo "`nBurp Suite Professional v$latestVersion is Downloaded.`n"
+echo "`n`t`tDownloading Latest Burp Suite Professional..."
+$version = (Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/professional/latest" -UseBasicParsing).BaseResponse.ResponseUri.Segments[-1] -replace 'professional-community-', '' -replace '-', '.'
+Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar" `
+-OutFile "burpsuite_pro_v$version.jar"
+echo "`nBurp Suite Professional is Downloaded.`n"
 
 # Creating Burp.bat file with command for execution
 if (Test-Path burp.bat) {rm burp.bat}
