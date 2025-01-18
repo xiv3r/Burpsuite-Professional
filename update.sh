@@ -18,7 +18,7 @@ cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
 Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2024.11.1&type=Jar"
-version="2024.11.1"
+version=$(curl -s https://portswigger.net/burp/releases/professional/latest | grep -o '[0-9]\+-[0-9]\+-[0-9]\+' | head -1 | tr '-' '.')
 
 echo "Downloading Burpsuite Professional v$version ..."
 
