@@ -10,13 +10,16 @@ git clone https://github.com/xiv3r/Burpsuite-Professional.git
 cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
-version="2024.11.1"
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
-
+latest_version=$(curl -s https://portswigger.net/burp/releases/professional/latest | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1)
+echo -e "\n\t\tDownloading Latest Burp Suite Professional version $latest_version"
+# Download the file
+curl -L "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$latest_version&type=Jar" \
+     --output "burpsuite_pro_v$latest_version.jar"
+echo -e "\nBurp Suite Professional v$latest_version is Downloaded.\n"
 
 # Download Burpsuite Professional
-echo "Downloading Burpsuite Professional v$version ..."
-wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
+echo "Downloading Burpsuite Professional v$latest_version"
+wget "$Link" -O burpsuite_pro_v$latest_version.jar --quiet --show-progress
 
 # Execute Key Generator
 echo "Starting Key loader.jar..."
