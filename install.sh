@@ -10,7 +10,7 @@ git clone https://github.com/xiv3r/Burpsuite-Professional.git
 cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
-version=latest
+version=2025.1.4
 # Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
 ## Without Specific version it can auto downlaod latest version
 Link="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar"
