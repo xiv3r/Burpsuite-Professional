@@ -31,8 +31,10 @@ if (!($jre8)){
 # Downloading Burp Suite Professional
 
 echo "`n`t`tDownloading Latest Burp Suite Professional..."
-$version = "2025.1.1"
-Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar" `
+$version = "latest"
+# Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar" `
+## Without Specific version it can auto downlaod latest version
+Invoke-WebRequest -Uri "https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar" `
 -OutFile "burpsuite_pro_v$version.jar"
 echo "`nBurp Suite Professional is Downloaded.`n"
 
