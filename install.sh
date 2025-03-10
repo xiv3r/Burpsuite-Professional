@@ -10,10 +10,8 @@ git clone https://github.com/xiv3r/Burpsuite-Professional.git
 cd Burpsuite-Professional
 
 # Download Burpsuite Professional Latest.
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=2025.1.4&type=Jar"
-
-# Extract the version from the Link
-version=$(echo "$Link" | grep -oP '(?<=version=)[^&]+')
+version=2025.1.4
+Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
 
 # Download Burpsuite Professional
 echo "Downloading Burpsuite Professional v$version ..."
