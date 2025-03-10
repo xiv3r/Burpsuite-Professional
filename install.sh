@@ -9,13 +9,10 @@ sudo apt install git wget openjdk-21-jre openjdk-22-jre openjdk-23-jre -y
 git clone https://github.com/xiv3r/Burpsuite-Professional.git 
 cd Burpsuite-Professional
 
-# Download Burpsuite Professional Latest.
-version=2025.1.4
-Link="https://portswigger-cdn.net/burp/releases/download?product=pro&version=$version&type=Jar"
-
 # Download Burpsuite Professional
-echo "Downloading Burpsuite Professional v$version ..."
-wget "$Link" -O burpsuite_pro_v$version.jar --quiet --show-progress
+echo "Downloading Burpsuite Professional Latest...
+version=2025
+axel https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar -o burpsuite_pro_v$version.jar
 
 # Execute Key Generator
 echo "Starting Key loader.jar..."
