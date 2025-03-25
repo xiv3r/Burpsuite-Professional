@@ -1,5 +1,3 @@
-<p align="center"> <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxiv3r%2FBurpsuite-Professional&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=%F0%9F%91%81%EF%B8%8F+++%F0%9F%91%81%EF%B8%8F&edge_flat=false">
-
 ![Screenshot_2024-09-19_17_45_09](https://github.com/user-attachments/assets/873ef98a-48e0-445b-b5dc-eb5959ad5b34)
 
 # <h1 align="center"> Burpsuite Professional v2024 latest </h1>
@@ -27,19 +25,21 @@ burpsuitepro
 ```
 <details><summary>
 
-### Update [Optional]
+### Update
 </summary>
 
+> optional
 ```sh
-cd && rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo sh
+cd && rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo bash
 ```
 </details>
 
 <details><summary>
 
-### Java Version [ stable: openjdk-21-jre ]
+### Java Version
 </summary>
 
+> select the default java version
 ```sh
 sudo update-alternatives --config java
 ```               
