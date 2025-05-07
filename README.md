@@ -15,17 +15,17 @@
 
 <br></br>
 
-- ### $${\color{cyan}Install}$$
+# $${\color{cyan}Install}$$
 ```sh
 wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 ```
-- ### $${\color{cyan}Run}$$
+# $${\color{cyan}Run}$$
 ```sh
 burpsuitepro
 ```
 <details><summary>
 
-### $${\color{cyan}Update}$$
+# $${\color{cyan}Update}$$
 </summary>
 
 > optional
@@ -38,8 +38,8 @@ rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv
 </details>
 
 <details><summary>
-
-### $${\color{cyan}Java- Version}$$
+ 
+# $${\color{cyan}Java- Version}$$
 </summary>
 
 > select the default java version
@@ -48,7 +48,7 @@ sudo update-alternatives --config java
 ```               
 </details>
 
-- ### $${\color{cyan}Setup- License}$$
+# $${\color{cyan}Setup- License}$$
 
 <div align="center">
  
@@ -57,7 +57,7 @@ https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-4
  
 Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
 
-- ### $${\color{cyan}Launcher- (xfce)}$$
+# $${\color{cyan}Launcher- (xfce)}$$
 
      right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
 
