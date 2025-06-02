@@ -11,21 +11,17 @@
  
 <br></br>
 
-<h1 align="center">Linux Installation</h1>
-
-<br></br>
-
-# Install
+# Linux Installation
 ```sh
 wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 ```
-# Run
+## Run
 ```sh
 burpsuitepro
 ```
 <details><summary>
 
-# Update
+## Update
 </summary>
 
 > optional
@@ -39,7 +35,7 @@ rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv
 
 <details><summary>
  
-# Java Version
+## Java Version
 </summary>
 
 > select the default java version
@@ -48,7 +44,7 @@ sudo update-alternatives --config java
 ```               
 </details>
 
-# Setup Licenses
+## Setup Licenses
 
 <div align="center">
  
@@ -57,15 +53,17 @@ https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-4
  
 Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
 
-# Shortcut Launcher - (xfce)
+<br>
 
-     right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
+## Shortcut Launcher - (xfce)
+right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
 
 <div align="center">
  <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
 </div>
 
-# <h1 align="center">Windows Installation </h1>
+---------
+# Windows Installation
 
 <br>
  
@@ -100,12 +98,9 @@ Note: Copy the license from loader to the burpsuite > manual activation > copy b
       C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
 
 
-<h3 align="center" >
-
  <details><summary>Credit</summary>
 
 * Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
 * Script 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
 
 </details>
-</h2>
