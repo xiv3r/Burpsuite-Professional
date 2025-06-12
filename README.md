@@ -63,6 +63,49 @@ right click the desktop -> create a launcher name it Burpsuite Professional, add
 </div>
 
 ---------
+
+# NixOS Installation
+## Add this repo's flake to your flake inputs
+```
+# flake.nix
+{
+  # ...
+  inputs = {
+    burpsuitepro = {
+      type = "github";
+      owner = "xiv3r";
+      repo = "Burpsuite-Professional";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+  # ...
+}
+```
+
+## Installing the package provided by the flake
+### You can install it with either `environment.systemPackages` or `home.packages`
+> With `environment.systemPackages` (nixosModules)
+
+  ```
+    { inputs, ... }: {
+      environment.systemPackages = [
+        inputs.burpsuitepro.packages.${system}.default
+      ];
+    }
+  ```
+
+> With `home.packages` (home-manager)
+ ```
+    { inputs, ... }: {
+      home.packages = [
+        inputs.burpsuitepro.packages.${system}.default
+      ];
+    }
+  ```
+
+NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the license keys. You can access the `loader` command from the terminal only
+
+
 # Windows Installation
 
 <br>
