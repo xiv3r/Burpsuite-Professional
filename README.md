@@ -140,6 +140,40 @@ NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the l
 
       C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
 
+# Installing Burp Suite Professional on macOS
+
+## Step 1: Install Dependencies with Homebrew
+Install Homebrew and required dependencies (`git`, `openjdk@17`).
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install git openjdk@17
+```
+
+## Step 2: Run the Installation Script
+Clone the Burp Suite Professional repository, download the Burp Suite JAR file, and execute the key generator and Burp Suite.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install_macos.sh | bash
+```
+
+## Step 3: Install the `burp` Shortcut
+Make the `burp` script executable and install it globally.
+
+```bash
+chmod +x burp
+sudo cp burp /usr/local/bin/burp
+```
+
+**Explanation**:
+- The `installmacos.sh` script creates a `burp` script to run Burp Suite with required Java options.
+- Uses `$(pwd)` to reference JAR files in the current directory.
+- Makes the script executable and copies it to `/usr/local/bin` for global access.
+
+
+## Notes
+- **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
+
 
  <details><summary>Credit</summary>
 
