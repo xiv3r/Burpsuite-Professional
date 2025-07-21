@@ -4,8 +4,8 @@ cd Burpsuite-Professional
 
 # Download Burpsuite Professional
 echo "Downloading Burp Suite Professional Latest..."
-version=2025.5.6
-url="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar"
+version=2025
+url="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
 curl -L "$url" -o "burpsuite_pro_v$version.jar"
 
 # Execute Key Generator and Burp Suite Simultaneously

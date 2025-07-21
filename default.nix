@@ -16,7 +16,6 @@
   burpSrc = fetchurl {
     name = "burpsuite.jar";
     urls = [
-      "https://portswigger-cdn.net/burp/releases/download?product=${productName}&version=${version}&type=Jar"
       "https://portswigger.net/burp/releases/download?product=${productName}&version=${version}&type=Jar"
       "https://web.archive.org/web/https://portswigger.net/burp/releases/download?product=${productName}&version=${version}&type=Jar"
     ];
