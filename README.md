@@ -9,7 +9,8 @@
 [Overview](https://portswigger.net/burp/pro)
 </h3>
  
-<br></br>
+<br>
+<br>
 
 # Linux Installation
 ```sh
@@ -19,27 +20,17 @@ wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/in
 ```sh
 burpsuitepro
 ```
-<details><summary>
+<details><summary></summary>
 
 ## Update
-</summary>
-
 > optional
-```sh
-cd
 ```
+cd && sudo rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo bash
 ```
-rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo bash
-```
-</details>
-
-<details><summary>
  
 ## Java Version
-</summary>
-
-> select the default java version
-```sh
+> select the default openjdk runtime
+```
 sudo update-alternatives --config java
 ```               
 </details>
@@ -61,6 +52,9 @@ right click the desktop -> create a launcher name it Burpsuite Professional, add
 <div align="center">
  <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
 </div>
+
+<br>
+<br>
 
 ---------
 
@@ -105,6 +99,10 @@ right click the desktop -> create a launcher name it Burpsuite Professional, add
 
 NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the license keys. You can access the `loader` command from the terminal only
 
+<br>
+<br>
+
+----------
 
 # Windows Installation
 
@@ -140,7 +138,12 @@ NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the l
 
       C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
 
-# Installing Burp Suite Professional on macOS
+<br>
+<br>
+
+------------
+
+# MacOS Installation 
 
 ## Step 1: Install Dependencies with Homebrew
 Install Homebrew and required dependencies (`git`, `openjdk@17`).
@@ -175,7 +178,7 @@ sudo cp burp /usr/local/bin/burp
 - **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
 
 
- <details><summary>Credit</summary>
+### <details><summary>Credits</summary>
 
 * Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
 * Script 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
