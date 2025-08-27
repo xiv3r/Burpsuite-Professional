@@ -1,6 +1,9 @@
 ![Screenshot_2024-09-19_17_45_09](https://github.com/user-attachments/assets/873ef98a-48e0-445b-b5dc-eb5959ad5b34)
 
-# <h1 align="center">Burpsuite Professional v2025 latest</h1>
+<div align="center">
+
+# $${\color{orange}Burpsuite-Professional-v2025-latest}$$
+</div>
 
 <p align="center"> Burp Suite Professional is the web security tester's toolkit of choice. Use it to automate repetitive testing tasks - then dig deeper with its expert-designed manual and semi-automated security testing tools. Burp Suite Professional can help you to test for OWASP Top 10 vulnerabilities - as well as the very latest hacking techniques. Advanced manual and automated features empower users to find lurking vulnerabilities more quickly. Burp Suite is designed and used by the industry's best.</p>
 
@@ -12,9 +15,9 @@
 <br>
 <br>
 
-# Linux Installation
+#  $${\color{magenta}Linux-Installation}$$
 ```sh
-wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
+sudo apt update && sudo apt install -y wget && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 ```
 ## Run
 ```sh
@@ -58,7 +61,8 @@ right click the desktop -> create a launcher name it Burpsuite Professional, add
 
 ---------
 
-# NixOS Installation
+#  $${\color{magenta}NixOS-Installation}$$
+
 ## Add this repo's flake to your flake inputs
 ```
 # flake.nix
@@ -77,7 +81,7 @@ right click the desktop -> create a launcher name it Burpsuite Professional, add
 ```
 
 ## Installing the package provided by the flake
-### You can install it with either `environment.systemPackages` or `home.packages`
+## You can install it with either `environment.systemPackages` or `home.packages`
 > With `environment.systemPackages` (nixosModules)
 
   ```
@@ -104,9 +108,7 @@ NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the l
 
 ----------
 
-# Windows Installation
-
-<br>
+# $${\color{magenta}Windows-Installation}$$
  
 - Make a `Burp` directory name in `C Drive` for faster access.
 
@@ -143,7 +145,7 @@ NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the l
 
 ------------
 
-# MacOS Installation 
+# $${\color{magenta}MacOS-Installation}$$ 
 
 ## Step 1: Install Dependencies with Homebrew
 Install Homebrew and required dependencies (`git`, `openjdk@17`).
@@ -178,7 +180,10 @@ sudo cp burp /usr/local/bin/burp
 - **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
 
 
-### <details><summary>Credits</summary>
+<details><summary>
+
+## Credits
+</summary>
 
 * Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
 * Script 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
