@@ -12,8 +12,7 @@ cd Burpsuite-Professional
 # Download Burpsuite Professional
 echo "Downloading Burp Suite Professional Latest..."
 version=2025
-url="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
-axel "$url" -o "burpsuite_pro_v$version.jar"
+axel -o burpsuite_pro_v$version.jar https://portswigger.net/burp/releases/download?product=pro&type=Jar
 
 # Execute Key Generator
 echo "Starting Key loader.jar..."
