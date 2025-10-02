@@ -54,12 +54,41 @@ EOL
 }
 
 function check_dependencies() {
-    for dep in git axel java curl; do
+    echo "Installing Dependencies..."
+    sudo apt update
+
+    # Install basic dependencies
+    for dep in git axel curl; do
         if ! command -v $dep &>/dev/null; then
-            echo "Installing missing dependency: $dep"
-            sudo apt update && sudo apt install -y $dep
+            echo "Installing $dep..."
+            sudo apt install -y $dep || {
+                echo "Error installing $dep"
+                exit 1
+            }
         fi
     done
+
+    # Try to install Java if not present
+    if ! command -v java &>/dev/null; then
+        echo "Installing Java..."
+        # Try different Java versions in order of preference
+        for java_version in openjdk-21-jre openjdk-17-jre openjdk-11-jre default-jre; do
+            if sudo apt install -y $java_version 2>/dev/null; then
+                echo "Successfully installed $java_version"
+                break
+            fi
+        done
+    fi
+
+    # Final verification
+    if ! command -v java &>/dev/null; then
+        echo "Error: Could not install Java. Please install Java manually (version 11 or higher)"
+        exit 1
+    fi
+
+    # Show installed Java version
+    echo "Using Java version:"
+    java -version
 }
 
 function detect_desktop_env() {
