@@ -23,7 +23,7 @@ jobs:
         sudo apt install axel -y
         mkdir -p downloads
         cd downloads
-        axel "https://portswigger.net/burp/releases/download?product=pro&type=Jar"
+        axel https://portswigger.net/burp/releases/download?product=pro&type=Jar
         
     - name: Determine release tag
       id: get_tag
