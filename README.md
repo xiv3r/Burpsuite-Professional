@@ -179,6 +179,12 @@ sudo cp burp /usr/local/bin/burp
 ## Notes
 - **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
 
+## Contributors 
+
+<a href="https://github.com/xiv3r/Burpsuite-Professional/graphs/contributors">
+  <img src="https://contrib.rocks/image?&columns=25&max=10000&&repo=xiv3r/Burpsuite-Professional" alt="contributors"/>
+</a>
+
 
 <details><summary>
 
