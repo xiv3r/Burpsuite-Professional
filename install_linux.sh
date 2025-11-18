@@ -3,7 +3,7 @@
 # Usage: ./run.sh
 
 set -e
-REPO_URL="https://github.com/sproffes/Burpsuite-Professional.git"
+REPO_URL="https://github.com/sPROFFEs/Burpsuite-Professional"
 REPO_DIR="$PWD"
 LOADER_JAR="loader.jar"
 BURP_URL="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
