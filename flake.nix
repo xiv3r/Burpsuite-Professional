@@ -9,19 +9,22 @@
     self,
     nixpkgs,
   }: let
-    system = "x86_64-linux";
-    pkgs = import nixpkgs {
-      inherit system;
-      config = {
-        allowUnfree = true;
-      };
-    };
-  in {
-    packages.${system} = {
-      burpsuitepro =
-        pkgs.callPackage ./default.nix {
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
+    ];
+    forAllSystems = nixpkgs.lib.genAttrs systems (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
         };
-      default = self.packages.${system}.burpsuitepro;
-    };
+      in {
+        burpsuitepro = pkgs.callPackage ./default.nix { };
+        default = self.packages.${system}.burpsuitepro;
+      }
+    );
+  in {
+    packages = forAllSystems;
   };
 }
