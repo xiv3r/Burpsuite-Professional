@@ -11,7 +11,7 @@ cd Burpsuite-Professional
 
 # Download Burpsuite Professional
 echo "Downloading Burp Suite Professional Latest..."
-version=2025
+version=2026
 wget -O burpsuite_pro_v$version.jar https://github.com/xiv3r/Burpsuite-Professional/releases/download/burpsuite-pro/burpsuite_pro_v$version.jar
 
 # Execute Key Generator
