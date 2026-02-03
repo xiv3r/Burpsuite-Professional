@@ -113,6 +113,7 @@ NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the l
 - Make a `Burp` directory name in `C Drive` for faster access.
 
 - Download [install.ps1](https://codeload.github.com/xiv3r/Burpsuite-Professional/zip/refs/heads/main) and extract move the file inside to `C:\Burp`
+- (You may want to temporarily turn off Windows Defender If it messes with any file or deletes any file0)
 
 - Open `Powershell` as administrator and execute below command to set Script Execution Policy.
 
