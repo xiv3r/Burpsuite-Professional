@@ -27,6 +27,7 @@ jobs:
         
     - name: Verifying Checksum
       run: |
+        cd downloads
         md5sum burpsuite_pro_v2026.jar > checksum.txt
         sha1sum burpsuite_pro_v2026.jar >> checksum.txt
         sha256sum burpsuite_pro_v2026.jar >> checksum.txt
