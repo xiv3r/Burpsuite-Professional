@@ -25,8 +25,6 @@ jobs:
         cd downloads
         axel -o burpsuite_pro_v2026.jar https://portswigger.net/burp/releases/download?product=pro&type=Jar
         sha256sum burpsuite_pro_v2026.jar > checksum.txt
-        sha1sum burpsuite_pro_v2026.jar >> checksum.txt
-        md5sum burpsuite_pro_v2026.jar >> checksum.txt
         
     - name: Determine release tag
       id: get_tag
