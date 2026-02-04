@@ -59,6 +59,18 @@ right click the desktop -> create a launcher name it Burpsuite Professional, add
 <br>
 <br>
 
+## "Burp browser is not available"
+![Screenshot_2026-01-13](https://github.com/user-attachments/assets/60d9b79b-9271-407a-a244-9bf36d654e6d)
+
+modify burpsuite launcher script - you may need to download [chromium](https://www.kali.org/tools/chromium/) packages.
+```sh
+# prepend "(" to the first line so the entire script is wrapped
+sudo sh -c 'sed -i "1s/^/(/" /usr/bin/burpsuitepro'
+
+# close the subshell and launch Chromium with Burp proxy
+sudo sh -c 'echo "); chromium --proxy-server=\"http://127.0.0.1:8080\" &" >> /usr/bin/burpsuitepro'
+```
+
 ---------
 
 #  $${\color{magenta}NixOS-Installation}$$
