@@ -28,13 +28,18 @@ if (!($jre8)){
     $jre8
 }
 
-# Download Burpsuite Professional
-Write-Host "Downloading Burp Suite Professional Latest..."
+# Check Burpsuite Professional or Download Burpsuite Professional
+Write-Host "Checking Burp Suite Professional..."
 $version = "2025"
-# Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/download?product=pro&version=$version&type=Jar" `
-#   -OutFile "burpsuite_pro_v$version.jar"
-Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/download?product=pro&type=Jar" `
-  -OutFile "burpsuite_pro_v$version.jar"
+
+if (Test-Path "burpsuite_pro_v$version.jar") {
+    Write-Host "Burp Suite Professional already exists. Skipping download."
+} else {
+    Write-Host "Burp Suite Professional not found. Downloading..."
+    Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/download?product=pro&type=Jar" `
+      -OutFile "burpsuite_pro_v$version.jar"
+}
+
 
 # Creating Burp.bat file with command for execution
 if (Test-Path burp.bat) {rm burp.bat}
