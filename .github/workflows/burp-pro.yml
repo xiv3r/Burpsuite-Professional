@@ -28,16 +28,16 @@ jobs:
     - name: Verifying Checksum
       run: |
         cd downloads
-        echo MD5 > md5
+        echo MD5: > md5
         md5sum burpsuite_pro_v2026.jar >> md5
         
-        echo SHA1 > sha1
+        echo SHA1: > sha1
         sha1sum burpsuite_pro_v2026.jar >> sha1
 
-        echo SHA256 > sha256
+        echo SHA256: > sha256
         sha256sum burpsuite_pro_v2026.jar >> sha256
 
-        echo SHA512 > sha512
+        echo SHA512: > sha512
         sha512sum burpsuite_pro_v2026.jar >> sha512
         
     - name: Determine release tag
@@ -94,6 +94,10 @@ jobs:
       with:
         tag_name: ${{ steps.get_tag.outputs.tag_name }}
         files: |
-          downloads/*.*
+          downloads/*.jar
+          downloads/md5
+          downloads/sha1
+          downloads/sha256
+          downloads/sha512
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
