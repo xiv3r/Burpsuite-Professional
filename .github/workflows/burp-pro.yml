@@ -5,7 +5,7 @@ on:
   release:
     types: [published]
   schedule:
-    - cron: "0 12 * * 0"
+    - cron: "0 0 * * 0"
     
 jobs:
   download-and-release:
@@ -28,9 +28,17 @@ jobs:
     - name: Verifying Checksum
       run: |
         cd downloads
-        md5sum burpsuite_pro_v2026.jar > checksum.txt
-        sha1sum burpsuite_pro_v2026.jar >> checksum.txt
-        sha256sum burpsuite_pro_v2026.jar >> checksum.txt
+        echo [ MD5 ] > md5
+        md5sum burpsuite_pro_v2026.jar >> md5
+        
+        echo [ SHA1 ] > sha1
+        sha1sum burpsuite_pro_v2026.jar >> sha1
+
+        echo [ SHA256 ] > sha256
+        sha256sum burpsuite_pro_v2026.jar >> sha256
+
+        echo [ SHA512 ] > sha512
+        sha512sum burpsuite_pro_v2026.jar >> sha512
         
     - name: Determine release tag
       id: get_tag
