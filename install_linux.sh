@@ -1,12 +1,24 @@
 #!/bin/bash
 # Burp Suite Professional - Centralized Menu
-# Usage: ./run.sh
 
 set -e
+
+# 1. Absolute Path Resolution (Goodbye $PWD)
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_URL="https://github.com/sPROFFEs/Burpsuite-Professional"
-REPO_DIR="$PWD"
 LOADER_JAR="loader.jar"
 BURP_URL="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
+
+# 2. Centralized JVM Arguments for easy maintenance
+JVM_ARGS=(
+    "--add-opens=java.desktop/javax.swing=ALL-UNNAMED"
+    "--add-opens=java.base/java.lang=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED"
+    "-javaagent:${BASE_DIR}/${LOADER_JAR}"
+    "-noverify"
+)
 
 function get_burp_version() {
     local version_info
@@ -14,14 +26,14 @@ function get_burp_version() {
     if [ -n "$version_info" ]; then
         printf "%s" "$version_info"
     else
-        printf "%s" "burpsuite_pro_v2025.jar"  # fallback version
+        printf "%s" "burpsuite_pro_v2025.jar"
     fi
 }
 
 BURP_JAR=$(get_burp_version)
 
 function install_panel_launcher() {
-    ICON_PATH="$PWD/burp_suite.ico"
+    ICON_PATH="${BASE_DIR}/burp_suite.ico"
     if [ ! -f "$ICON_PATH" ]; then
         echo "Error: Icon file $ICON_PATH not found!"
         return 1
@@ -30,7 +42,6 @@ function install_panel_launcher() {
     LAUNCHER_NAME="BurpSuite Professional"
     LAUNCHER_CMD="burpsuitepro"
     DESKTOP_FILE="burpsuite-professional.desktop"       
-    # XFCE4 & GNOME (ambos usan ~/.local/share/applications)
     APP_DIR="$HOME/.local/share/applications"
     mkdir -p "$APP_DIR"
 
@@ -49,172 +60,135 @@ StartupWMClass=burpsuite-pro
 EOL
 
     chmod +x "$APP_DIR/$DESKTOP_FILE"
-    update-desktop-database "$APP_DIR" 2>/dev/null || true
-    echo "Launcher added to panel/menu for XFCE4 and GNOME. You can find 'BurpSuite Professional' in your applications menu."
+    if command -v update-desktop-database &>/dev/null; then
+        update-desktop-database "$APP_DIR" 2>/dev/null || true
+    fi
+    echo "Launcher added to panel/menu. You can find 'BurpSuite Professional' in your applications menu."
 }
 
 function check_dependencies() {
-    echo "Installing Dependencies..."
-    sudo apt update
+    echo "Checking dependencies..."
+    
+    # Basic multi-distro support
+    if command -v apt &>/dev/null; then
+        PKG_MGR="sudo apt install -y"
+        sudo apt update
+    elif command -v pacman &>/dev/null; then
+        PKG_MGR="sudo pacman -S --noconfirm"
+    elif command -v dnf &>/dev/null; then
+        PKG_MGR="sudo dnf install -y"
+    else
+        echo "Package manager not automatically supported. Please ensure git, axel, curl, and java are installed."
+        return 0
+    fi
 
-    # Install basic dependencies
     for dep in git axel curl; do
         if ! command -v $dep &>/dev/null; then
             echo "Installing $dep..."
-            sudo apt install -y $dep || {
-                echo "Error installing $dep"
-                exit 1
-            }
+            $PKG_MGR $dep || { echo "Error installing $dep"; exit 1; }
         fi
     done
 
-    # Try to install Java if not present
     if ! command -v java &>/dev/null; then
         echo "Installing Java..."
-        # Try different Java versions in order of preference
-        for java_version in openjdk-21-jre openjdk-17-jre openjdk-11-jre default-jre; do
-            if sudo apt install -y $java_version 2>/dev/null; then
-                echo "Successfully installed $java_version"
-                break
-            fi
-        done
+        if command -v apt &>/dev/null; then
+            for java_version in openjdk-21-jre openjdk-17-jre openjdk-11-jre default-jre; do
+                if sudo apt install -y $java_version 2>/dev/null; then break; fi
+            done
+        else
+            $PKG_MGR jre-openjdk || $PKG_MGR java-latest-openjdk
+        fi
     fi
 
-    # Final verification
     if ! command -v java &>/dev/null; then
-        echo "Error: Could not install Java. Please install Java manually (version 11 or higher)"
+        echo "Error: Could not install Java automatically. Please install Java manually (version 11 or higher)."
         exit 1
     fi
-
-    # Show installed Java version
-    echo "Using Java version:"
-    java -version
 }
 
 function detect_desktop_env() {
-    if [ "$XDG_CURRENT_DESKTOP" = "XFCE" ]; then
-        echo "xfce"
-    elif [ "$XDG_CURRENT_DESKTOP" = "GNOME" ]; then
-        echo "gnome"
-    else
-        echo "unknown"
+    if [[ "${XDG_CURRENT_DESKTOP^^}" == *"XFCE"* ]]; then echo "xfce"
+    elif [[ "${XDG_CURRENT_DESKTOP^^}" == *"GNOME"* ]]; then echo "gnome"
+    elif [[ "${XDG_CURRENT_DESKTOP^^}" == *"KDE"* ]]; then echo "kde"
+    else echo "unknown"
     fi
 }
 
+# 3. Proper Git usage instead of deleting and re-cloning
 function sync_repository() {
-    SCRIPT_NAME="install_linux.sh"
+    echo "Syncing repository..."
+    cd "$BASE_DIR"
     
-    # Backup Burp JAR if it exists
-    if [ -f "$BURP_JAR" ]; then
-        echo "Backing up $BURP_JAR..."
-        cp "$BURP_JAR" "${BURP_JAR}.backup"
-    fi
-
-    # Backup the install script itself
-    if [ -f "$SCRIPT_NAME" ]; then
-        echo "Backing up $SCRIPT_NAME..."
-        cp "$SCRIPT_NAME" "${SCRIPT_NAME}.backup"
-    fi
-
-    echo "Cloning fresh repository..."
-    # Remove everything except backups
-    find . -not -name '*.backup' -type f -exec rm -f {} +
-    rm -rf .git
-
-    git clone "$REPO_URL" temp_repo
-    cp -rf temp_repo/* temp_repo/.git .
-    rm -rf temp_repo
-
-    # Restore the install script
-    if [ -f "${SCRIPT_NAME}.backup" ]; then
-        echo "Restoring $SCRIPT_NAME..."
-        mv "${SCRIPT_NAME}.backup" "$SCRIPT_NAME"
-        chmod +x "$SCRIPT_NAME"
-    fi
-
-    # Restore Burp JAR if it was backed up
-    if [ -f "${BURP_JAR}.backup" ]; then
-        echo "Restoring $BURP_JAR from backup..."
-        mv "${BURP_JAR}.backup" "$BURP_JAR"
+    if [ -d ".git" ]; then
+        git fetch --all
+        # Hard reset to the main branch (main or master) without touching untracked files like the JAR
+        git reset --hard origin/$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+        git pull
+    else
+        echo "Directory is not a valid Git repository. Skipping Git sync..."
     fi
 }
 
 function install_burp() {
     check_dependencies
-    
-    # Clone fresh repository
     sync_repository
     
-    # Check and download JAR if needed
+    cd "$BASE_DIR"
     if [ ! -f "$BURP_JAR" ]; then
         echo "Downloading Burp Suite Professional..."
-        axel -o "$BURP_JAR" "$BURP_URL"
+        axel -n 10 -o "$BURP_JAR" "$BURP_URL" || curl -L -o "$BURP_JAR" "$BURP_URL"
     else
         echo "$BURP_JAR already exists. Skipping download."
     fi
     
-    # Verify loader.jar exists
     if [ ! -f "$LOADER_JAR" ]; then
-        echo "Error: loader.jar is missing after repository sync!"
+        echo "Error: $LOADER_JAR is missing after repository sync!"
         exit 1
     fi
-    echo "\nInstallation complete.\n"
     
+    echo -e "\nInstallation complete.\n"
     echo "Starting loader.jar for initial setup..."
-    (java -jar "$LOADER_JAR") &
+    (cd "$BASE_DIR" && java -jar "$LOADER_JAR") &
     echo "Starting Burp Suite Professional..."
     run_burp
 
     read -p "Do you want to install the global command 'burpsuitepro'? [Y/n] " install_cmd
     install_cmd=${install_cmd:-y}
-    if [[ $install_cmd =~ ^[Yy] ]]; then
-        install_launcher
-    fi
+    if [[ $install_cmd =~ ^[Yy] ]]; then install_launcher; fi
 
     desktop_env=$(detect_desktop_env)
     if [ "$desktop_env" != "unknown" ]; then
         read -p "Do you want to create a desktop shortcut for $desktop_env? [Y/n] " create_shortcut
         create_shortcut=${create_shortcut:-y}
-        if [[ $create_shortcut =~ ^[Yy] ]]; then
-            install_panel_launcher
-        fi
+        if [[ $create_shortcut =~ ^[Yy] ]]; then install_panel_launcher; fi
     fi
 }
 
 function update_burp() {
     echo "Updating Burp Suite..."
+    cd "$BASE_DIR"
     
-    # Get latest version name
     BURP_JAR=$(get_burp_version)
-    echo "Latest version: $BURP_JAR"
+    echo "Latest version detected: $BURP_JAR"
     
-    # Always remove the JAR file first
     rm -f "$BURP_JAR"
-    
-    # Update repository files
     sync_repository
     
-    # Always download fresh JAR
     echo "Downloading fresh Burp Suite Professional..."
-    axel -o "$BURP_JAR" "$BURP_URL"
+    axel -n 10 -o "$BURP_JAR" "$BURP_URL" || curl -L -o "$BURP_JAR" "$BURP_URL"
 }
-
 
 function install_launcher() {
     LAUNCHER_PATH="/usr/local/bin/burpsuitepro"
     echo "Installing launcher to $LAUNCHER_PATH..."
+    
     cat > burpsuitepro << EOL
 #!/bin/bash
-cd "$PWD"
-java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \
-     --add-opens=java.base/java.lang=ALL-UNNAMED \
-     --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED \
-     --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED \
-     --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED \
-     -javaagent:"$PWD/$LOADER_JAR" \
-     -noverify \
-     -jar "$PWD/$BURP_JAR"
+# 4. Ensuring robust execution and argument passing (\$@)
+cd "${BASE_DIR}"
+java ${JVM_ARGS[*]} -jar "${BASE_DIR}/${BURP_JAR}" "\$@"
 EOL
+
     chmod +x burpsuitepro
     sudo mv burpsuitepro "$LAUNCHER_PATH"
     echo "Launcher installed. You can now run 'burpsuitepro' from anywhere."
@@ -232,28 +206,30 @@ function delete_launcher() {
 
 function delete_burp() {
     echo "Deleting Burp Suite files..."
+    cd "$BASE_DIR"
     rm -f "$BURP_JAR" "$LOADER_JAR"
     delete_launcher
-    echo "Deleted $BURP_JAR, $LOADER_JAR, and launcher."
+    echo "Local files and launcher deleted."
 }
 
 function run_loader() {
+    cd "$BASE_DIR"
     if [ ! -f "$LOADER_JAR" ]; then
         echo "loader.jar missing. Run install first."
         exit 1
     fi
-    echo "Starting Key loader.jar..."
+    echo "Starting $LOADER_JAR..."
     java -jar "$LOADER_JAR"
 }
 
 function run_burp() {
+    cd "$BASE_DIR"
     if [ ! -f "$BURP_JAR" ] || [ ! -f "$LOADER_JAR" ]; then
         echo "Burp Suite or loader.jar missing. Run install first."
         exit 1
     fi
-    JAVA_OPTS="--add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:$PWD/$LOADER_JAR -noverify -jar $PWD/$BURP_JAR"
     echo "Executing Burp Suite Professional..."
-    java $JAVA_OPTS
+    java "${JVM_ARGS[@]}" -jar "${BURP_JAR}"
 }
 
 function pause() {
@@ -271,7 +247,7 @@ function menu() {
     echo "4) Run Burp Suite"
     echo "5) Install Launcher (global command)"
     echo "6) Delete Launcher"
-    echo "7) Add Panel/Menu Launcher (XFCE4/GNOME)"
+    echo "7) Add Panel/Menu Launcher (Desktop)"
     echo "8) Run Loader (for license activation)"
     echo "9) Exit"
     echo "----------------------------------------"
