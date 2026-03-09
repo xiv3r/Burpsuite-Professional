@@ -16,9 +16,17 @@
 <br>
 
 #  $${\color{magenta}Linux-Installation}$$
+
+## For Debian-based systems 
 ```sh
 sudo apt update && sudo apt install -y wget && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
 ```
+
+## For Arch-based systems 
+```sh
+sudo pacman -Suy && sudo pacman -S wget && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
+```
+
 ## Run
 ```sh
 burpsuitepro
