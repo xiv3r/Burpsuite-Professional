@@ -3,13 +3,15 @@
 
 set -e
 
-# 1. Absolute Path Resolution (Goodbye $PWD)
+# 1. Absolute Path Resolution
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_URL="https://github.com/sPROFFEs/Burpsuite-Professional"
 LOADER_JAR="loader.jar"
+
+# The CDN workaround
 BURP_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar"
 
-# 2. Centralized JVM Arguments for easy maintenance
+# Centralized JVM Arguments
 JVM_ARGS=(
     "--add-opens=java.desktop/javax.swing=ALL-UNNAMED"
     "--add-opens=java.base/java.lang=ALL-UNNAMED"
@@ -29,8 +31,6 @@ function get_burp_version() {
         printf "%s" "burpsuite_pro_v2025.jar"
     fi
 }
-
-BURP_JAR=$(get_burp_version)
 
 function install_panel_launcher() {
     ICON_PATH="${BASE_DIR}/burp_suite.ico"
@@ -69,7 +69,6 @@ EOL
 function check_dependencies() {
     echo "Checking dependencies..."
     
-    # Basic multi-distro support
     if command -v apt &>/dev/null; then
         PKG_MGR="sudo apt install -y"
         sudo apt update
@@ -114,14 +113,12 @@ function detect_desktop_env() {
     fi
 }
 
-# 3. Proper Git usage instead of deleting and re-cloning
 function sync_repository() {
     echo "Syncing repository..."
     cd "$BASE_DIR"
     
     if [ -d ".git" ]; then
         git fetch --all
-        # Hard reset to the main branch (main or master) without touching untracked files like the JAR
         git reset --hard origin/$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
         git pull
     else
@@ -134,11 +131,17 @@ function install_burp() {
     sync_repository
     
     cd "$BASE_DIR"
-    if [ ! -f "$BURP_JAR" ]; then
-        echo "Downloading Burp Suite Professional..."
-        axel -n 10 -o "$BURP_JAR" "$BURP_URL" || curl -L -o "$BURP_JAR" "$BURP_URL"
+    
+    # 2. Smart Checker: Look for ANY existing version locally
+    EXISTING_JAR=$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+    
+    if [ -n "$EXISTING_JAR" ]; then
+        echo "Local version detected: $EXISTING_JAR. Skipping download."
     else
-        echo "$BURP_JAR already exists. Skipping download."
+        echo "No local version found. Fetching latest version info from CDN..."
+        BURP_JAR=$(get_burp_version)
+        echo "Downloading $BURP_JAR..."
+        axel -n 10 -o "$BURP_JAR" "$BURP_URL" || curl -L -o "$BURP_JAR" "$BURP_URL"
     fi
     
     if [ ! -f "$LOADER_JAR" ]; then
@@ -165,28 +168,45 @@ function install_burp() {
 }
 
 function update_burp() {
-    echo "Updating Burp Suite..."
+    echo "Checking for updates..."
     cd "$BASE_DIR"
     
-    BURP_JAR=$(get_burp_version)
-    echo "Latest version detected: $BURP_JAR"
+    # Check what is the latest online vs what we have locally
+    LATEST_JAR=$(get_burp_version)
+    EXISTING_JAR=$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
     
-    rm -f "$BURP_JAR"
+    if [ "$EXISTING_JAR" == "$LATEST_JAR" ]; then
+        echo "You already have the latest version ($LATEST_JAR). No update required."
+        return 0
+    fi
+    
+    echo "New version available: $LATEST_JAR"
+    if [ -n "$EXISTING_JAR" ]; then
+        echo "Removing old version ($EXISTING_JAR)..."
+        rm -f "$EXISTING_JAR"
+    fi
+    
     sync_repository
     
-    echo "Downloading fresh Burp Suite Professional..."
-    axel -n 10 -o "$BURP_JAR" "$BURP_URL" || curl -L -o "$BURP_JAR" "$BURP_URL"
+    echo "Downloading fresh Burp Suite Professional ($LATEST_JAR)..."
+    axel -n 10 -o "$LATEST_JAR" "$BURP_URL" || curl -L -o "$LATEST_JAR" "$BURP_URL"
+    echo "Update complete."
 }
 
 function install_launcher() {
     LAUNCHER_PATH="/usr/local/bin/burpsuitepro"
     echo "Installing launcher to $LAUNCHER_PATH..."
     
+    # 3. Dynamic Launcher: It will auto-detect the latest JAR every time it runs
     cat > burpsuitepro << EOL
 #!/bin/bash
-# 4. Ensuring robust execution and argument passing (\$@)
 cd "${BASE_DIR}"
-java ${JVM_ARGS[*]} -jar "${BASE_DIR}/${BURP_JAR}" "\$@"
+DYNAMIC_JAR=\$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+if [ -z "\$DYNAMIC_JAR" ]; then
+    echo "Error: Burp Suite JAR not found in ${BASE_DIR}"
+    exit 1
+fi
+java ${JVM_ARGS[*]} -jar "${BASE_DIR}/\$DYNAMIC_JAR" "\$@"
 EOL
 
     chmod +x burpsuitepro
@@ -207,7 +227,7 @@ function delete_launcher() {
 function delete_burp() {
     echo "Deleting Burp Suite files..."
     cd "$BASE_DIR"
-    rm -f "$BURP_JAR" "$LOADER_JAR"
+    rm -f burpsuite_pro_*.jar "$LOADER_JAR"
     delete_launcher
     echo "Local files and launcher deleted."
 }
@@ -224,12 +244,14 @@ function run_loader() {
 
 function run_burp() {
     cd "$BASE_DIR"
-    if [ ! -f "$BURP_JAR" ] || [ ! -f "$LOADER_JAR" ]; then
+    TARGET_JAR=$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+    
+    if [ -z "$TARGET_JAR" ] || [ ! -f "$LOADER_JAR" ]; then
         echo "Burp Suite or loader.jar missing. Run install first."
         exit 1
     fi
-    echo "Executing Burp Suite Professional..."
-    java "${JVM_ARGS[@]}" -jar "${BURP_JAR}"
+    echo "Executing Burp Suite Professional ($TARGET_JAR)..."
+    java "${JVM_ARGS[@]}" -jar "${TARGET_JAR}"
 }
 
 function pause() {
