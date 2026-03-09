@@ -7,7 +7,7 @@ set -e
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_URL="https://github.com/sPROFFEs/Burpsuite-Professional"
 LOADER_JAR="loader.jar"
-BURP_URL="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
+BURP_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar"
 
 # 2. Centralized JVM Arguments for easy maintenance
 JVM_ARGS=(
