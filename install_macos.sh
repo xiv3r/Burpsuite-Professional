@@ -5,9 +5,8 @@ export JAVA_HOME=/opt/homebrew/opt/openjdk@21
 export PATH=$JAVA_HOME/bin:$PATH
 hash -r
 
-# repo_url="https://github.com/xiv3r/Burpsuite-Professional.git"
-repo_url="https://github.com/ocelotshrouds/Burpsuite-Professional.git"
-branch="fix/macos"
+repo_url="https://github.com/xiv3r/Burpsuite-Professional.git"
+branch="main"
 repo_dir="Burpsuite-Professional"
 
 if [[ "$(basename "$PWD")" == "$repo_dir" ]]; then
