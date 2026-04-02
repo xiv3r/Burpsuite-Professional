@@ -18,7 +18,8 @@ fi
 mkdir -p "$target_dir"
 
 tmp_dir="$(mktemp -d)"
-trap 'rm -rf "$tmp_dir"' EXIT
+stage_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir" "$stage_dir"' EXIT
 
 echo "Pulling repository..."
 git clone --quiet --depth 1 --filter=blob:none --no-checkout "$repo_url" --branch "$branch" "$tmp_dir/src"
@@ -54,48 +55,53 @@ java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \
 
 
 echo "Creating burpsuitepro shortcut..."
-cat << EOF > burp
-#!/bin/bash
+cat > "$target_dir/burp" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="\$(cd -- "\$(dirname -- "\${BASH_SOURCE[0]}")" && pwd)"
 echo "Executing Burp Suite Professional..."
 java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \
      --add-opens=java.base/java.lang=ALL-UNNAMED \
      --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED \
      --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED \
      --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED \
-     -javaagent:$target_dir/loader.jar \
+     -javaagent:"\$SCRIPT_DIR/loader.jar" \
      -noverify \
-     -jar $target_dir/burpsuite_pro_v${version}.jar &
+     -jar "\$SCRIPT_DIR/burpsuite_pro_v${version}.jar" &
 EOF
 
-chmod +x burp
+chmod +x "$target_dir/burp"
 
 #app bundle
 app_name="Burp Suite Professional"
 app_dest="$HOME/Applications"
 app_bundle="${app_dest}/${app_name}.app"
 
-rm -rf "$app_bundle"
-
 if pgrep -f "Burp Suite Professional" >/dev/null 2>&1; then
     echo "Burp Suite Professional appears to be running. Close it first."
     exit 1
 fi
 
+cp "$target_dir/burpsuite_pro_v${version}.jar" "$stage_dir/"
+cp "$target_dir/loader.jar" "$stage_dir/"
+cp "$target_dir/burp_suite.icns" "$stage_dir/"
+
 rm -rf "$app_bundle"
 
 echo "Creating burpsuitepro app bundle..."
 jpackage --name "$app_name" \
-  --input "$target_dir" \
+  --input "$stage_dir" \
   --main-jar "burpsuite_pro_v${version}.jar" \
+  --main-class "burp.StartBurp" \
   --type app-image \
-  --icon "$target_dir/burp_suite.icns" \
+  --icon "$stage_dir/burp_suite.icns" \
   --dest "${app_dest}/" \
   --java-options "--add-opens=java.desktop/javax.swing=ALL-UNNAMED" \
   --java-options "--add-opens=java.base/java.lang=ALL-UNNAMED" \
   --java-options "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED" \
   --java-options "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED" \
   --java-options "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED" \
-  --java-options "-javaagent:$target_dir/loader.jar" \
+  --java-options "-javaagent:\$APPDIR/loader.jar" \
   --java-options "-noverify"
   
 echo "Done"
