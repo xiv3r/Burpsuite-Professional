@@ -21,8 +21,9 @@ mkdir -p "$target_dir"
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
 
+echo "Pulling repository..."
 git clone --quiet --depth 1 --filter=blob:none --no-checkout "$repo_url" --branch "$branch" "$tmp_dir/src"
-git -C "$tmp_dir/src" checkout HEAD -- . ':(exclude)Launcher.jpg'
+git -C "$tmp_dir/src" checkout -q HEAD -- . ':(exclude)Launcher.jpg' 2>/dev/null
 
 printf 'tmp_dir=%q\n' "$tmp_dir"
 printf 'target_dir=%q\n' "$target_dir"
@@ -70,13 +71,26 @@ EOF
 chmod +x burp
 
 #app bundle
+app_name="Burp Suite Professional"
+app_dest="$HOME/Applications"
+app_bundle="${app_dest}/${app_name}.app"
+
+rm -rf "$app_bundle"
+
+if pgrep -f "Burp Suite Professional" >/dev/null 2>&1; then
+    echo "Burp Suite Professional appears to be running. Close it first."
+    exit 1
+fi
+
+rm -rf "$app_bundle"
+
 echo "Creating burpsuitepro app bundle..."
-jpackage --name "Burp Suite Professional" \
+jpackage --name "$app_name" \
   --input "$target_dir" \
   --main-jar "burpsuite_pro_v${version}.jar" \
   --type app-image \
   --icon "$target_dir/burp_suite.icns" \
-  --dest "$HOME/Applications/" \
+  --dest "${app_dest}/" \
   --java-options "--add-opens=java.desktop/javax.swing=ALL-UNNAMED" \
   --java-options "--add-opens=java.base/java.lang=ALL-UNNAMED" \
   --java-options "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED" \
@@ -84,3 +98,5 @@ jpackage --name "Burp Suite Professional" \
   --java-options "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED" \
   --java-options "-javaagent:$target_dir/loader.jar" \
   --java-options "-noverify"
+  
+echo "Done"
