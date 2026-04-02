@@ -21,7 +21,7 @@ mkdir -p "$target_dir"
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf "$tmp_dir"' EXIT
 
-git clone --depth 1 --filter=blob:none --no-checkout "$repo_url" --branch "$branch" "$tmp_dir/src"
+git clone --quiet --depth 1 --filter=blob:none --no-checkout "$repo_url" --branch "$branch" "$tmp_dir/src"
 git -C "$tmp_dir/src" checkout HEAD -- . ':(exclude)Launcher.jpg'
 
 printf 'tmp_dir=%q\n' "$tmp_dir"
