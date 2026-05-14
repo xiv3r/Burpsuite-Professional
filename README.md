@@ -16,10 +16,18 @@
 <br>
 
 #  $${\color{magenta}Linux-Installation}$$
+
+Prefer the maintained local menu script:
+
 ```sh
-sudo apt update && sudo apt install -y wget && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
+chmod +x install_linux.sh
+./install_linux.sh
 ```
+
+Avoid piping remote scripts directly into `sudo bash`; it makes review and rollback difficult.
+
 ## Run
+
 ```sh
 burpsuitepro
 ```
@@ -27,9 +35,12 @@ burpsuitepro
 
 ## Update
 > optional
+
 ```
-cd && sudo rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo bash
+./install_linux.sh
 ```
+
+Then choose option `2) Update Burp Suite` from the menu.
  
 ## Java Version
 > select the default openjdk runtime
@@ -46,6 +57,13 @@ https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-4
 </div>
  
 Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
+
+## Security Notes
+
+- Review scripts before running them with elevated privileges.
+- Treat downloaded JAR files as executable code.
+- `loader.jar` is a Java executable/agent and should be treated as untrusted unless you built and verified it yourself.
+- See [`SECURITY.md`](SECURITY.md) for the local hardening notes.
 
 <br>
 

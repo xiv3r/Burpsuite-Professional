@@ -25,6 +25,15 @@
   loaderSrc = ./.;
 
   pname = "burpsuitepro";
+  jvmArgs = [
+    "--add-opens=java.desktop/javax.swing=ALL-UNNAMED"
+    "--add-opens=java.base/java.lang=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED"
+    "-javaagent:${loaderSrc}/loader.jar"
+    "-noverify"
+  ];
 
   description = "An integrated platform for performing security testing of web applications";
   desktopItem = makeDesktopItem {
@@ -43,7 +52,7 @@ in
   buildFHSEnv {
     inherit pname version;
 
-    runScript = "${jdk}/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:${loaderSrc}/loader.jar -noverify -jar ${burpSrc} &";
+    runScript = "${jdk}/bin/java ${lib.concatStringsSep " " jvmArgs} -jar ${burpSrc} &";
 
     targetPkgs = pkgs:
       with pkgs; [
@@ -80,16 +89,16 @@ in
 
       ${lib.getBin unzip}/bin/unzip -p ${burpSrc} resources/Media/icon64${productName}.png > $out/share/pixmaps/burpsuitepro.png
 
-      cp ${burpSrc} $out/share/burpsuite_pro_v${version}.jar
-      cp ${loaderSrc}/loader.jar $out/share/loader.jar
+      cp "${burpSrc}" "$out/share/burpsuite_pro_v${version}.jar"
+      cp "${loaderSrc}/loader.jar" "$out/share/loader.jar"
 
       # Create loader executable
       mkdir -p $out/bin
       echo "#!${pkgs.bash}/bin/bash" > $out/bin/loader
-      echo "\"${jdk}/bin/java\" -jar \"$out/share/loader.jar\" \"\$@\"" >> $out/bin/loader
-      chmod +x $out/bin/loader
+      echo "\"${jdk}/bin/java\" -jar \"$out/share/loader.jar\" \"\$@\"" >> "$out/bin/loader"
+      chmod +x "$out/bin/loader"
 
-      cp -r ${desktopItem}/share/applications $out/share
+      cp -r "${desktopItem}/share/applications" "$out/share"
     '';
 
     meta = with lib; {
@@ -112,6 +121,6 @@ in
         bennofs
         fab
       ];
-      mainProgram = "burpsuite";
+      mainProgram = pname;
     };
   }

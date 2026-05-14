@@ -1,11 +1,10 @@
 #!/bin/bash
 # Burp Suite Professional - Centralized Menu
 
-set -e
+set -Eeuo pipefail
 
 # 1. Absolute Path Resolution
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_URL="https://github.com/sPROFFEs/Burpsuite-Professional"
 LOADER_JAR="loader.jar"
 
 # The CDN workaround
@@ -24,7 +23,7 @@ JVM_ARGS=(
 
 function get_burp_version() {
     local version_info
-    version_info=$(curl -s -L -I "$BURP_URL" | grep -i "content-disposition" | grep -o "burpsuite_pro[^;]*\.jar" | head -n1 | tr -d '\r\n')
+    version_info=$(curl -fsSL -I "$BURP_URL" | grep -i "content-disposition" | grep -o "burpsuite_pro[^;]*\.jar" | head -n1 | tr -d '\r\n' || true)
     if [ -n "$version_info" ]; then
         printf "%s" "$version_info"
     else
@@ -68,6 +67,7 @@ EOL
 
 function check_dependencies() {
     echo "Checking dependencies..."
+    local PKG_MGR=""
     
     if command -v apt &>/dev/null; then
         PKG_MGR="sudo apt install -y"
@@ -82,18 +82,26 @@ function check_dependencies() {
     fi
 
     for dep in git axel curl; do
-        if ! command -v $dep &>/dev/null; then
+        if ! command -v "$dep" &>/dev/null; then
             echo "Installing $dep..."
-            $PKG_MGR $dep || { echo "Error installing $dep"; exit 1; }
+            $PKG_MGR "$dep" || { echo "Error installing $dep"; exit 1; }
         fi
     done
 
     if ! command -v java &>/dev/null; then
         echo "Installing Java..."
         if command -v apt &>/dev/null; then
+            local java_installed=false
             for java_version in openjdk-21-jre openjdk-17-jre openjdk-11-jre default-jre; do
-                if sudo apt install -y $java_version 2>/dev/null; then break; fi
+                if sudo apt install -y "$java_version" 2>/dev/null; then
+                    java_installed=true
+                    break
+                fi
             done
+            if [ "$java_installed" = false ]; then
+                echo "Error: Could not install Java with apt."
+                exit 1
+            fi
         else
             $PKG_MGR jre-openjdk || $PKG_MGR java-latest-openjdk
         fi
@@ -106,9 +114,10 @@ function check_dependencies() {
 }
 
 function detect_desktop_env() {
-    if [[ "${XDG_CURRENT_DESKTOP^^}" == *"XFCE"* ]]; then echo "xfce"
-    elif [[ "${XDG_CURRENT_DESKTOP^^}" == *"GNOME"* ]]; then echo "gnome"
-    elif [[ "${XDG_CURRENT_DESKTOP^^}" == *"KDE"* ]]; then echo "kde"
+    local desktop="${XDG_CURRENT_DESKTOP:-}"
+    if [[ "${desktop^^}" == *"XFCE"* ]]; then echo "xfce"
+    elif [[ "${desktop^^}" == *"GNOME"* ]]; then echo "gnome"
+    elif [[ "${desktop^^}" == *"KDE"* ]]; then echo "kde"
     else echo "unknown"
     fi
 }
@@ -118,11 +127,51 @@ function sync_repository() {
     cd "$BASE_DIR"
     
     if [ -d ".git" ]; then
-        git fetch --all
-        git reset --hard origin/$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
-        git pull
+        local current_branch upstream
+        current_branch=$(git branch --show-current)
+        if [ -z "$current_branch" ]; then
+            echo "Detached HEAD detected. Skipping repository sync to avoid overwriting local state."
+            return 0
+        fi
+
+        upstream=$(git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>/dev/null || true)
+        if [ -z "$upstream" ]; then
+            echo "No upstream configured for $current_branch. Skipping repository sync."
+            return 0
+        fi
+
+        git fetch --prune
+        if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo "Local changes detected. Skipping sync to avoid overwriting your work."
+            return 0
+        fi
+
+        git merge --ff-only "$upstream"
     else
         echo "Directory is not a valid Git repository. Skipping Git sync..."
+    fi
+}
+
+function latest_local_jar() {
+    find "$BASE_DIR" -maxdepth 1 -type f -name 'burpsuite_pro_*.jar' -printf '%f\n' | sort -V | tail -n 1
+}
+
+function download_burp_jar() {
+    local target_jar="$1"
+    local temp_jar="${target_jar}.part"
+
+    rm -f "$temp_jar"
+    if axel -n 10 -o "$temp_jar" "$BURP_URL" || curl -fL -o "$temp_jar" "$BURP_URL"; then
+        if [ ! -s "$temp_jar" ]; then
+            echo "Error: Downloaded file is empty."
+            rm -f "$temp_jar"
+            return 1
+        fi
+        mv "$temp_jar" "$target_jar"
+    else
+        rm -f "$temp_jar"
+        echo "Error: Download failed."
+        return 1
     fi
 }
 
@@ -133,7 +182,7 @@ function install_burp() {
     cd "$BASE_DIR"
     
     # 2. Smart Checker: Look for ANY existing version locally
-    EXISTING_JAR=$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+    EXISTING_JAR=$(latest_local_jar)
     
     if [ -n "$EXISTING_JAR" ]; then
         echo "Local version detected: $EXISTING_JAR. Skipping download."
@@ -141,7 +190,7 @@ function install_burp() {
         echo "No local version found. Fetching latest version info from CDN..."
         BURP_JAR=$(get_burp_version)
         echo "Downloading $BURP_JAR..."
-        axel -n 10 -o "$BURP_JAR" "$BURP_URL" || curl -L -o "$BURP_JAR" "$BURP_URL"
+        download_burp_jar "$BURP_JAR"
     fi
     
     if [ ! -f "$LOADER_JAR" ]; then
@@ -173,7 +222,7 @@ function update_burp() {
     
     # Check what is the latest online vs what we have locally
     LATEST_JAR=$(get_burp_version)
-    EXISTING_JAR=$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+    EXISTING_JAR=$(latest_local_jar)
     
     if [ "$EXISTING_JAR" == "$LATEST_JAR" ]; then
         echo "You already have the latest version ($LATEST_JAR). No update required."
@@ -181,27 +230,28 @@ function update_burp() {
     fi
     
     echo "New version available: $LATEST_JAR"
-    if [ -n "$EXISTING_JAR" ]; then
-        echo "Removing old version ($EXISTING_JAR)..."
-        rm -f "$EXISTING_JAR"
-    fi
-    
     sync_repository
     
     echo "Downloading fresh Burp Suite Professional ($LATEST_JAR)..."
-    axel -n 10 -o "$LATEST_JAR" "$BURP_URL" || curl -L -o "$LATEST_JAR" "$BURP_URL"
+    download_burp_jar "$LATEST_JAR"
+    if [ -n "$EXISTING_JAR" ] && [ "$EXISTING_JAR" != "$LATEST_JAR" ]; then
+        echo "Removing old version ($EXISTING_JAR)..."
+        rm -f "$EXISTING_JAR"
+    fi
     echo "Update complete."
 }
 
 function install_launcher() {
     LAUNCHER_PATH="/usr/local/bin/burpsuitepro"
+    local temp_launcher
+    temp_launcher=$(mktemp)
     echo "Installing launcher to $LAUNCHER_PATH..."
     
     # 3. Dynamic Launcher: It will auto-detect the latest JAR every time it runs
-    cat > burpsuitepro << EOL
+    cat > "$temp_launcher" << EOL
 #!/bin/bash
 cd "${BASE_DIR}"
-DYNAMIC_JAR=\$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+DYNAMIC_JAR=\$(find "${BASE_DIR}" -maxdepth 1 -type f -name 'burpsuite_pro_*.jar' -printf '%f\n' | sort -V | tail -n 1)
 if [ -z "\$DYNAMIC_JAR" ]; then
     echo "Error: Burp Suite JAR not found in ${BASE_DIR}"
     exit 1
@@ -209,8 +259,11 @@ fi
 java ${JVM_ARGS[*]} -jar "${BASE_DIR}/\$DYNAMIC_JAR" "\$@"
 EOL
 
-    chmod +x burpsuitepro
-    sudo mv burpsuitepro "$LAUNCHER_PATH"
+    chmod +x "$temp_launcher"
+    sudo mv "$temp_launcher" "$LAUNCHER_PATH" || {
+        rm -f "$temp_launcher"
+        return 1
+    }
     echo "Launcher installed. You can now run 'burpsuitepro' from anywhere."
 }
 
@@ -244,7 +297,7 @@ function run_loader() {
 
 function run_burp() {
     cd "$BASE_DIR"
-    TARGET_JAR=$(ls burpsuite_pro_*.jar 2>/dev/null | sort -V | tail -n 1)
+    TARGET_JAR=$(latest_local_jar)
     
     if [ -z "$TARGET_JAR" ] || [ ! -f "$LOADER_JAR" ]; then
         echo "Burp Suite or loader.jar missing. Run install first."
@@ -270,7 +323,7 @@ function menu() {
     echo "5) Install Launcher (global command)"
     echo "6) Delete Launcher"
     echo "7) Add Panel/Menu Launcher (Desktop)"
-    echo "8) Run Loader (for license activation)"
+    echo "8) Run Loader"
     echo "9) Exit"
     echo "----------------------------------------"
     read -p "Choose an option [1-9]: " opt
