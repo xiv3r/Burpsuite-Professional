@@ -4,9 +4,8 @@ set -euo pipefail
 
 REPO_URL="https://github.com/xiv3r/Burpsuite-Professional.git"
 REPO_DIR="Burpsuite-Professional"
-version=2025
 url="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
-burp_jar="burpsuite_pro_v$version.jar"
+burp_jar="burpsuite_desktop_latest.jar"
 
 if [ -f "loader.jar" ]; then
   repo_dir="$(pwd)"
@@ -59,7 +58,7 @@ java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \
      --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED \
      -javaagent:"${SCRIPT_DIR}/loader.jar" \
      -noverify \
-     -jar "${SCRIPT_DIR}/burpsuite_pro_v2025.jar" &
+     -jar "${SCRIPT_DIR}/burpsuite_desktop_latest.jar" &
 EOF
 chmod +x burp
 

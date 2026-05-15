@@ -23,11 +23,11 @@ JVM_ARGS=(
 
 function get_burp_version() {
     local version_info
-    version_info=$(curl -fsSL -I "$BURP_URL" | grep -i "content-disposition" | grep -o "burpsuite_pro[^;]*\.jar" | head -n1 | tr -d '\r\n' || true)
+    version_info=$(curl -fsSL -I "$BURP_URL" | grep -i "content-disposition" | grep -Eo "burpsuite_(pro|desktop)[^;\"[:space:]]*\.jar" | head -n1 | tr -d '\r\n' || true)
     if [ -n "$version_info" ]; then
         printf "%s" "$version_info"
     else
-        printf "%s" "burpsuite_pro_v2025.jar"
+        printf "%s" "burpsuite_desktop_latest.jar"
     fi
 }
 
@@ -153,7 +153,7 @@ function sync_repository() {
 }
 
 function latest_local_jar() {
-    find "$BASE_DIR" -maxdepth 1 -type f -name 'burpsuite_pro_*.jar' -printf '%f\n' | sort -V | tail -n 1
+    find "$BASE_DIR" -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1
 }
 
 function download_burp_jar() {
@@ -251,7 +251,7 @@ function install_launcher() {
     cat > "$temp_launcher" << EOL
 #!/bin/bash
 cd "${BASE_DIR}"
-DYNAMIC_JAR=\$(find "${BASE_DIR}" -maxdepth 1 -type f -name 'burpsuite_pro_*.jar' -printf '%f\n' | sort -V | tail -n 1)
+DYNAMIC_JAR=\$(find "${BASE_DIR}" -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1)
 if [ -z "\$DYNAMIC_JAR" ]; then
     echo "Error: Burp Suite JAR not found in ${BASE_DIR}"
     exit 1
@@ -280,7 +280,7 @@ function delete_launcher() {
 function delete_burp() {
     echo "Deleting Burp Suite files..."
     cd "$BASE_DIR"
-    rm -f burpsuite_pro_*.jar "$LOADER_JAR"
+    rm -f burpsuite_pro_*.jar burpsuite_desktop_*.jar "$LOADER_JAR"
     delete_launcher
     echo "Local files and launcher deleted."
 }

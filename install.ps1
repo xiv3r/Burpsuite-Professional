@@ -59,14 +59,12 @@ if (!($jre8)){
 
 # Download Burpsuite Professional
 Write-Host "Downloading Burp Suite Professional Latest..."
-$version = "2025"
-# Invoke-WebRequest -Uri "https://portswigger.net/burp/releases/download?product=pro&version=$version&type=Jar" `
-#   -OutFile "burpsuite_pro_v$version.jar"
-Download-File "https://portswigger.net/burp/releases/download?product=pro&type=Jar" "burpsuite_pro_v$version.jar"
+$BurpFileName = "burpsuite_desktop_latest.jar"
+Download-File "https://portswigger.net/burp/releases/download?product=pro&type=Jar" $BurpFileName
 
 # Creating Burp.bat file with command for execution
 if (Test-Path burp.bat) { Remove-Item burp.bat -Force }
-$BurpJar = Join-Path $ScriptDir "burpsuite_pro_v$version.jar"
+$BurpJar = Join-Path $ScriptDir $BurpFileName
 $LoaderJar = Join-Path $ScriptDir "loader.jar"
 $path = "java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:`"$LoaderJar`" -noverify -jar `"$BurpJar`""
 $path | Set-Content -Path Burp.bat

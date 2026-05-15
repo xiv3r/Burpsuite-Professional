@@ -2,7 +2,7 @@
 
 <div align="center">
 
-# $${\color{orange}Burpsuite-Professional-v2025-latest}$$
+# $${\color{orange}Burpsuite-Professional-latest}$$
 </div>
 
 <p align="center"> Burp Suite Professional is the web security tester's toolkit of choice. Use it to automate repetitive testing tasks - then dig deeper with its expert-designed manual and semi-automated security testing tools. Burp Suite Professional can help you to test for OWASP Top 10 vulnerabilities - as well as the very latest hacking techniques. Advanced manual and automated features empower users to find lurking vulnerabilities more quickly. Burp Suite is designed and used by the industry's best.</p>
@@ -195,7 +195,7 @@ sudo cp burp /usr/local/bin/burp
 
 
 ## Notes
-- **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
+- **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and a local Burp Suite JAR such as `burpsuite_desktop_latest.jar`. For global use, replace `$(pwd)` with absolute paths.
 
 
 <details><summary>
