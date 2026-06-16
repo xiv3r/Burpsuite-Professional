@@ -17,28 +17,51 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Read VERSION
+      id: version
+      run: |
+        VERSION=$(cat VERSION | tr -d '[:space:]')
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+    - name: Read BURP_SHA256
+      id: burp_sha256
+      run: |
+        BURP_SHA256=$(cat BURP_SHA256 | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+        echo "BURP_SHA256=$BURP_SHA256" >> $GITHUB_OUTPUT
+
     - name: Download files
       run: |
         sudo apt update
         sudo apt install axel -y
         mkdir -p downloads
         cd downloads
-        axel -o burpsuite_pro_v2026.jar https://portswigger.net/burp/releases/download?product=pro&type=Jar
+        axel -o "burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar" "https://github.com/xiv3r/Burpsuite-Professional/releases/download/burpsuite-pro/burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar"
         
-    - name: Verifying Checksum
+    - name: Verify JAR hash
+      run: |
+        cd downloads
+        EXPECTED_SHA256="${{ steps.burp_sha256.outputs.BURP_SHA256 }}"
+        ACTUAL_SHA256=$(sha256sum "burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar" | cut -d' ' -f1 | tr '[:upper:]' '[:lower:]')
+        if [ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]; then
+          echo "SHA-256 mismatch: expected $EXPECTED_SHA256, got $ACTUAL_SHA256"
+          exit 1
+        fi
+        echo "SHA-256 hash verified: $ACTUAL_SHA256"
+
+    - name: Generate checksum files
       run: |
         cd downloads
         echo MD5: > md5
-        md5sum burpsuite_pro_v2026.jar >> md5
+        md5sum "burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar" >> md5
         
         echo SHA1: > sha1
-        sha1sum burpsuite_pro_v2026.jar >> sha1
+        sha1sum "burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar" >> sha1
 
         echo SHA256: > sha256
-        sha256sum burpsuite_pro_v2026.jar >> sha256
+        sha256sum "burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar" >> sha256
 
         echo SHA512: > sha512
-        sha512sum burpsuite_pro_v2026.jar >> sha512
+        sha512sum "burpsuite_pro_v${{ steps.version.outputs.VERSION }}.jar" >> sha512
         
     - name: Determine release tag
       id: get_tag
