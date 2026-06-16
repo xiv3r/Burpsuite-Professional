@@ -1,197 +1,126 @@
-![Screenshot_2024-09-19_17_45_09](https://github.com/user-attachments/assets/873ef98a-48e0-445b-b5dc-eb5959ad5b34)
+# Burpsuite-Professional
 
-<div align="center">
+Multi-platform installer and distribution for Burp Suite Professional. This repository provides shell, PowerShell, and Nix installers that download the pinned Burp JAR, attach the bundled `loader.jar` Java agent, and create platform-native launchers. It is not a web application.
 
-# $${\color{orange}Burpsuite-Professional-v2026-latest}$$
-</div>
+## Files overview
 
-<p align="center"> Burp Suite Professional is the web security tester's toolkit of choice. Use it to automate repetitive testing tasks - then dig deeper with its expert-designed manual and semi-automated security testing tools. Burp Suite Professional can help you to test for OWASP Top 10 vulnerabilities - as well as the very latest hacking techniques. Advanced manual and automated features empower users to find lurking vulnerabilities more quickly. Burp Suite is designed and used by the industry's best.</p>
+| File | Description |
+|------|-------------|
+| `install.sh` | Linux installer. Installs dependencies, clones the repo into `$HOME/Burpsuite-Professional`, downloads the Burp JAR, verifies its SHA-256 hash, and installs a `burpsuitepro` system launcher. |
+| `update.sh` | Linux updater. Refreshes the install directory, downloads the pinned Burp JAR, verifies the hash, and atomically replaces `/bin/burpsuitepro`. |
+| `install_macos.sh` | macOS installer. Requires a full JDK with `jpackage`. Creates a `burp` command-line launcher and a `~/Applications/Burp Suite Professional.app` bundle. |
+| `install.ps1` | Windows installer. Detects or downloads Oracle JDK 21 and JRE 8, downloads the Burp JAR, verifies the hash, and creates `Burp.bat` and `Burp-Suite-Pro.vbs`. |
+| `default.nix` | Nix derivation for `burpsuitepro`, reading `VERSION` and `BURP_SHA256`. |
+| `flake.nix` | Nix flake exposing the `burpsuitepro` package for supported systems. |
+| `help.sh` | Prints available commands and a short activation guide. |
+| `loader.jar` | Java agent / key loader bundled with the distribution. |
+| `launcher.jpg`, `burp_suite.ico`, `burp_suite.icns` | Launcher and application icons. |
+| `BURP_SHA256` | Expected SHA-256 hash of the downloaded Burp JAR. |
+| `LOADER_SHA256` | Expected SHA-256 hash of the bundled `loader.jar`. |
 
-<h3 align="center">
+## Versioning
 
-[Overview](https://portswigger.net/burp/pro)
-</h3>
- 
-<br>
-<br>
+`VERSION` and `BURP_SHA256` are the single sources of truth for the Burp Suite Professional JAR version and its SHA-256 hash.
 
-#  $${\color{magenta}Linux-Installation}$$
-```sh
-sudo apt update && sudo apt install -y wget && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install.sh | sudo bash
+- All installers (`install.sh`, `update.sh`, `install_macos.sh`, `install.ps1`) read the version from `VERSION` and verify the downloaded JAR against `BURP_SHA256`.
+- The Nix derivation (`default.nix`) imports both files directly.
+- The CI workflow (`.github/workflows/burp-pro.yml`) reads both values and verifies the release artifact before publishing.
+
+If you need to update Burp Suite Professional, change both files together and verify the new hash before running any installer.
+
+## Linux
+
+Run the installer:
+
+```bash
+./install.sh
 ```
-## Run
-```sh
+
+The script:
+
+1. Updates packages and installs `git`, `wget`, and `openjdk-21-jre` via `apt` (requires `sudo`).
+2. Clones or pulls the repo into `$HOME/Burpsuite-Professional`.
+3. Downloads `burpsuite_pro_v${VERSION}.jar` from the GitHub release mirror.
+4. Verifies the JAR against `BURP_SHA256`.
+5. Writes a `burpsuitepro` launcher script and copies it to `/bin/burpsuitepro` (requires `sudo` unless already root).
+6. Starts the key loader and Burp Suite Professional.
+
+After installation, run Burp from anywhere with:
+
+```bash
 burpsuitepro
 ```
-<details><summary></summary>
 
-## Update
-> optional
-```
-cd && sudo rm -rf Burpsuite-Professional && wget -qO- https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/refs/heads/main/update.sh | sudo bash
-```
- 
-## Java Version
-> select the default openjdk runtime
-```
-sudo update-alternatives --config java
-```               
-</details>
+To update later, run `update.sh` from the install directory or re-run `install.sh`.
 
-## Setup Licenses
+## macOS
 
-<div align="center">
- 
-https://github.com/xiv3r/Burpsuite-Professional/assets/117867334/c25831a4-68a2-44ee-b6dd-5ff18165f340
-</div>
- 
-Note: Copy the license from loader to the burpsuite > manual activation > copy burpsuite request key to loader request >  copy response key to the burpsuite.
-
-<br>
-
-## Shortcut Launcher - (xfce)
-right click the desktop -> create a launcher name it Burpsuite Professional, add command `burpsuitepro` and select burpsuite community icon.
-
-<div align="center">
- <img width="500" height="500" src="https://github.com/xiv3r/Burpsuite-Professional/blob/main/Launcher.jpg">
-</div>
-
-<br>
-<br>
-
----------
-
-#  $${\color{magenta}NixOS-Installation}$$
-
-## Add this repo's flake to your flake inputs
-```
-# flake.nix
-{
-  # ...
-  inputs = {
-    burpsuitepro = {
-      type = "github";
-      owner = "xiv3r";
-      repo = "Burpsuite-Professional";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-  # ...
-}
-```
-
-## Installing the package provided by the flake
-## You can install it with either `environment.systemPackages` or `home.packages`
-> With `environment.systemPackages` (nixosModules)
-
-  ```
-    { inputs, ... }: {
-      environment.systemPackages = [
-        inputs.burpsuitepro.packages.${system}.default
-      ];
-    }
-  ```
-
-> With `home.packages` (home-manager)
- ```
-    { inputs, ... }: {
-      home.packages = [
-        inputs.burpsuitepro.packages.${system}.default
-      ];
-    }
-  ```
-
-NOTE: `loader.jar` is symlinked to `burpsuite.jar` so burpsuite recognizes the license keys. You can access the `loader` command from the terminal only
-
-<br>
-<br>
-
-----------
-
-# $${\color{magenta}Windows-Installation}$$
- 
-- Make a `Burp` directory name in `C Drive` for faster access.
-
-- Download [install.ps1](https://codeload.github.com/xiv3r/Burpsuite-Professional/zip/refs/heads/main) and extract move the file inside to `C:\Burp`
-
-- Open `Powershell` as administrator and execute below command to set Script Execution Policy.
-
-
-      Set-ExecutionPolicy -ExecutionPolicy bypass -Scope process
-
-- Inside PowerShell go to `cd C:\Burp`
-
-- Now Execute `install.ps1` file in Powershell to Complete Installation.
-
-      ./install.ps1
- 
-- Change the icon of `Burp-Suite-Pro.vbs` to the given icon 
-
-- Create a shortcut to Desktop. Right Click over `Burp-Suite-Pro.vbs` Go to Shortcut tab, and below there is `Change Icon` tab
-
-- Click there and choose the `burp-suite.ico` from `C:\Burp\`
-
-   <div align="center">
-    
-    <img src="https://user-images.githubusercontent.com/29830064/230825172-16c9cfba-4bca-46a4-86df-b352a4330b12.png">
-</div>
-
-- For Start Menu Entry, copy `Burp-Suite-Pro.vbs` file to 
-
-      C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
-
-<br>
-<br>
-
-------------
-
-# $${\color{magenta}MacOS-Installation}$$ 
-
-## Step 1: Install Dependencies with Homebrew
-Install Homebrew and required dependencies (`git`, `openjdk@17`).
+Run the installer:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install git openjdk@17
+./install_macos.sh
 ```
 
-## Step 2: Run the Installation Script
-Clone the Burp Suite Professional repository, download the Burp Suite JAR file, and execute the key generator and Burp Suite.
+Prerequisites:
+
+- A full JDK that includes `jpackage` (e.g., `brew install openjdk@17`). A JRE-only installation is not sufficient.
+- `git` and `curl` (usually installed with the JDK or via Homebrew).
+
+The script:
+
+1. Clones or pulls the repo into `$HOME/Burpsuite-Professional`.
+2. Downloads `burpsuite_pro_v${VERSION}.jar` and verifies its SHA-256 hash.
+3. Starts the key loader and Burp Suite Professional.
+4. Creates a `burp` launcher in `$HOME/Burpsuite-Professional` that changes into the install directory before launching, so it works from any working directory.
+5. Uses `jpackage` to build `~/Applications/Burp Suite Professional.app`.
+
+After installation, run from the install directory:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install_macos.sh | bash
+~/Burpsuite-Professional/burp
 ```
 
-## Step 3: Install the `burp` Shortcut
-Make the `burp` script executable and install it globally.
+Or open the app bundle from `~/Applications/Burp Suite Professional.app`.
+
+## Windows
+
+Open PowerShell and run:
+
+```powershell
+.\install.ps1
+```
+
+The script:
+
+1. Checks the registry for Oracle JDK 21 and JRE 8; downloads and installs them if either is missing.
+2. Downloads `burpsuite_pro_v${VERSION}.jar` from the GitHub release mirror.
+3. Verifies the JAR against `BURP_SHA256`.
+4. Creates `Burp.bat` in the current directory with the full Java invocation.
+5. Creates `Burp-Suite-Pro.vbs` for background execution.
+6. Starts the key loader and Burp Suite Professional.
+
+After installation, double-click `Burp-Suite-Pro.vbs` or run `Burp.bat` from the directory where you ran `install.ps1`.
+
+## Nix/NixOS
+
+Build and run with:
 
 ```bash
-chmod +x burp
-sudo cp burp /usr/local/bin/burp
+nix build .#burpsuitepro
+./result/bin/burpsuitepro
 ```
 
-**Explanation**:
-- The `installmacos.sh` script creates a `burp` script to run Burp Suite with required Java options.
-- Uses `$(pwd)` to reference JAR files in the current directory.
-- Makes the script executable and copies it to `/usr/local/bin` for global access.
+The flake currently supports only `x86_64-linux` because `default.nix` uses `buildFHSEnv`, which is Linux-specific. On Apple Silicon or other unsupported systems, use `install_macos.sh` instead.
 
+## Security notes
 
-## Notes
-- **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
+- Do not commit `loader.jar` activation keys, logs, or other generated artifacts.
+- The Burp JAR hash in `BURP_SHA256` is verified by every installer and by CI before a release is published.
+- The bundled `loader.jar` hash in `LOADER_SHA256` is also verified by every installer before execution.
+- All downloaded binaries are pinned to the version in `VERSION` and the hash in `BURP_SHA256`; the installers fail if the hash does not match.
+- Keep `VERSION`, `BURP_SHA256`, and `LOADER_SHA256` in sync and verify hashes from a trusted source before updating them.
+- Oracle JDK 21 / JRE 8 installer downloads on Windows are not hash-verified by this project because Oracle does not publish stable, machine-readable hashes for those executables. Pre-install the JDK/JRE yourself if you do not want to trust Oracle's distribution channel.
+## Attributions
 
-## Contributors 
-
-<a href="https://github.com/xiv3r/Burpsuite-Professional/graphs/contributors">
-  <img src="https://contrib.rocks/image?&columns=25&max=10000&&repo=xiv3r/Burpsuite-Professional" alt="contributors"/>
-</a>
-
-
-<details><summary>
-
-## Credits
-</summary>
-
-* Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
-* Script 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
-
-</details>
+- `loader.jar`: [h3110w0r1d-y/BurpLoaderKeygen](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
+- Script foundation: [cyb3rzest/Burp-Suite-Pro](https://github.com/cyb3rzest/Burp-Suite-Pro)

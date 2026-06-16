@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -euo pipefail
 # =============================================================================
 # help.sh - Display help for Burp Suite Professional
 # 
@@ -47,14 +47,14 @@ show_help() {
 # Main script starts here
 # Check if user wants help or gave no arguments
 # $1 is the first argument passed to the script
-if [ "$1" = "help" ] || [ -z "$1" ]; then
-    # User asked for help or gave no arguments
+if [[ "${1:-}" == "help" || -z "${1:-}" ]]; then
     show_help
 else
     # User gave an unknown argument
     echo -e "${RED}Unknown argument: $1${NC}"
     echo -e "${BLUE}Type './help.sh' to see available commands${NC}"
     exit 1  # Exit with error code 1
+
 fi
 
 # Exit successfully (error code 0)

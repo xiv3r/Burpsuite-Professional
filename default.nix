@@ -7,19 +7,18 @@
   makeDesktopItem,
   unzip,
 }: let
-  version = "2025.1.1";
+  version = lib.removeSuffix "\n" (lib.fileContents ./VERSION);
 
   productName = "pro";
   productDesktop = "BurpSuite Professional";
-  burpHash = "sha256-17COQ9deYkzmaXBbg1arD3BQY7l3WZ9FakLXzTxgmr8=";
+  burpHash = lib.removeSuffix "\n" (lib.fileContents ./BURP_SHA256);
 
   burpSrc = fetchurl {
     name = "burpsuite.jar";
     urls = [
-      "https://portswigger.net/burp/releases/download?product=${productName}&version=${version}&type=Jar"
-      "https://web.archive.org/web/https://portswigger.net/burp/releases/download?product=${productName}&version=${version}&type=Jar"
+      "https://github.com/xiv3r/Burpsuite-Professional/releases/download/burpsuite-pro/burpsuite_pro_v${version}.jar"
     ];
-    hash = burpHash;
+    sha256 = burpHash;
   };
 
   loaderSrc = ./.;
@@ -43,7 +42,7 @@ in
   buildFHSEnv {
     inherit pname version;
 
-    runScript = "${jdk}/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:${loaderSrc}/loader.jar -noverify -jar ${burpSrc} &";
+    runScript = "${jdk}/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED -javaagent:${loaderSrc}/loader.jar -noverify -jar ${burpSrc}";
 
     targetPkgs = pkgs:
       with pkgs; [
@@ -100,18 +99,15 @@ in
         initial mapping and analysis of an application's attack surface, through to finding and
         exploiting security vulnerabilities.
       '';
-      homepage = "https://github.com/sammhansen/Burpsuite-Professional.git";
+      homepage = "https://github.com/xiv3r/Burpsuite-Professional";
       changelog =
         "https://portswigger.net/burp/releases/professional-community-"
         + replaceStrings ["."] ["-"] version;
       sourceProvenance = with sourceTypes; [binaryBytecode];
       license = licenses.unfree;
-      platforms = jdk.meta.platforms;
+      platforms = lib.platforms.linux;
       hydraPlatforms = [];
-      maintainers = with maintainers; [
-        bennofs
-        fab
-      ];
-      mainProgram = "burpsuite";
+      maintainers = [];
+      mainProgram = pname;
     };
   }
