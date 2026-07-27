@@ -185,13 +185,6 @@ sudo cp burp /usr/local/bin/burp
   <img src="https://contrib.rocks/image?&columns=25&max=10000&&repo=xiv3r/Burpsuite-Professional" alt="contributors"/>
 </a>
 
-
-<details><summary>
-
 ## Credits
-</summary>
-
-* Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
-* Script 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
-
-</details>
+- Loader.jar 👉 [h3110w0r1d-y](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
+- Script 👉 [cyb3rzest](https://github.com/cyb3rzest/Burp-Suite-Pro)
