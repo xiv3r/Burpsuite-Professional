@@ -152,7 +152,7 @@ Install Homebrew and required dependencies (`git`, `openjdk@17`).
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install git openjdk@17
+brew install git openjdk@21
 ```
 
 ## Step 2: Run the Installation Script
@@ -162,22 +162,21 @@ Clone the Burp Suite Professional repository, download the Burp Suite JAR file, 
 curl -fsSL https://raw.githubusercontent.com/xiv3r/Burpsuite-Professional/main/install_macos.sh | bash
 ```
 
-## Step 3: Install the `burp` Shortcut
-Make the `burp` script executable and install it globally.
+## Step 3: (Optional) Install the `burp` Shortcut
+Symlink `burp` from any location on your `$PATH` to call it using the terminal e.g. `/usr/local/bin/burp`. Alternatively, run the bundled app installed at `~/Applications/Burp Suite Professional.app`. Replace the directories with the actual location to your install and run:
 
 ```bash
-chmod +x burp
-sudo cp burp /usr/local/bin/burp
+sudo ln -s path/to/install/folder/burp /usr/local/bin/burp
 ```
 
-**Explanation**:
-- The `installmacos.sh` script creates a `burp` script to run Burp Suite with required Java options.
-- Uses `$(pwd)` to reference JAR files in the current directory.
-- Makes the script executable and copies it to `/usr/local/bin` for global access.
+If you move the install folder, just run the above command again pointing to the new location.
 
+**Explanation**:
+- The `install_macos.sh` script creates an executable `burp` script and bundled app to run Burp Suite with required Java options.
+- Uses relative paths to reference JAR files in the current directory.
 
 ## Notes
-- **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2025.5.6.jar`. For global use, replace `$(pwd)` with absolute paths.
+- **Running the Shortcut**: Run `burp` from the `Burpsuite-Professional` directory containing `loader.jar` and `burpsuite_pro_v2026.jar`.
 
 ## Contributors 
 
