@@ -2,12 +2,12 @@
 
 # Remove old files
 echo "Removing Old Files..."
-sudo rm -rf /bin/burpsuitepro
+sudo rm -f /bin/burpsuitepro
 
 # Installing Dependencies
 echo "Installing Dependencies..."
 sudo apt update
-sudo apt install git axel openjdk-21-jre openjdk-22-jre openjdk-23-jre -y
+sudo apt install git wget openjdk-21-jre -y
 
 # Cloning
 git clone https://github.com/xiv3r/Burpsuite-Professional.git 
@@ -15,11 +15,10 @@ cd Burpsuite-Professional
 
 # Download Burpsuite Professional
 echo "Downloading Burp Suite Professional Latest..."
-version=2025.5.6
-url="https://portswigger.net/burp/releases/download?product=pro&type=Jar"
-axel "$url" -o "burpsuite_pro_v$version.jar"
+version=2025
+wget -O burpsuite_pro_v$version.jar https://github.com/xiv3r/Burpsuite-Professional/releases/download/burpsuite-pro/burpsuite_pro_v$version.jar
 
-# Execute Key Generator and Burp Suite Simultaneously
+# Execute Key Generator
 echo "Starting Key loader.jar..."
 (java -jar loader.jar) &
 

@@ -5,7 +5,7 @@ $ProgressPreference = 'SilentlyContinue'
 # Check JDK-21 Availability or Download JDK-21
 $jdk21 = Get-WmiObject -Class Win32_Product -filter "Vendor='Oracle Corporation'" |where Caption -clike "Java(TM) SE Development Kit 21*"
 if (!($jdk21)){
-    echo "`t`tDownnloading Java JDK-21 ...."
+    echo "`t`tDownloading Java JDK-21 ...."
     wget "https://download.oracle.com/java/21/archive/jdk-21_windows-x64_bin.exe" -O jdk-21.exe  
     echo "`n`t`tJDK-21 Downloaded, lets start the Installation process"
     start -wait jdk-21.exe
