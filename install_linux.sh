@@ -72,16 +72,19 @@ function install_panel_launcher() {
     fi
 
     LAUNCHER_NAME="BurpSuite Professional"
-    LAUNCHER_CMD="burpsuitepro"
+    # SOLUCIÓN 1: Ruta absoluta obligatoria para el entorno gráfico.
+    LAUNCHER_CMD="/usr/local/bin/burpsuitepro"
     DESKTOP_FILE="burpsuite-professional.desktop"       
-    APP_DIR="$HOME/.local/share/applications"
     
-    # If run with sudo, install to the real user's profile if SUDO_USER exists
+    APP_DIR="$HOME/.local/share/applications"
     if [ -n "${SUDO_USER:-}" ]; then
-        APP_DIR=$(su - "$SUDO_USER" -c "echo \$HOME/.local/share/applications")
+        # SOLUCIÓN 2: Extracción aséptica del HOME sin banners de Kali/MOTD.
+        USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+        APP_DIR="${USER_HOME}/.local/share/applications"
     fi
     
     mkdir -p "$APP_DIR"
+    rm -f "$APP_DIR/$DESKTOP_FILE" 2>/dev/null || true
 
     cat > "$APP_DIR/$DESKTOP_FILE" << EOL
 [Desktop Entry]
@@ -294,17 +297,23 @@ function install_launcher() {
 cd "${BASE_DIR}"
 DYNAMIC_JAR=\$(find "${BASE_DIR}" -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1)
 if [ -z "\$DYNAMIC_JAR" ]; then
-    echo "Error: Burp Suite JAR not found in ${BASE_DIR}"
+    echo "Error: Burp Suite JAR not found in ${BASE_DIR}" >&2
     exit 1
 fi
-java ${JVM_ARGS[*]} -jar "${BASE_DIR}/\$DYNAMIC_JAR" "\$@"
+# SOLUCIÓN 3: 'exec' reemplaza bash por java. El Desktop Environment trackea el PID real.
+exec java ${JVM_ARGS[*]} -jar "${BASE_DIR}/\$DYNAMIC_JAR" "\$@"
 EOL
 
     chmod +x "$temp_launcher"
-    mv "$temp_launcher" "$LAUNCHER_PATH" || {
+    rm -f "$LAUNCHER_PATH" 2>/dev/null || true
+    mv -f "$temp_launcher" "$LAUNCHER_PATH" || {
         rm -f "$temp_launcher"
         return 1
     }
+    
+    # SOLUCIÓN 4: Romper el bloqueo de permisos (umask) para el usuario estándar.
+    chmod -R a+rX "${BASE_DIR}"
+    
     echo "Launcher installed. You can now run 'burpsuitepro' from anywhere."
 }
 
