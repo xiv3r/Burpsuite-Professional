@@ -56,7 +56,8 @@ REAL_USER="${SUDO_USER:-$USER}"
 # Función para ejecutar Java bajando los privilegios si se ejecuta como root
 function run_java_as_user() {
     if [ "$USER" == "root" ] && [ -n "${SUDO_USER:-}" ]; then
-        sudo -u "$SUDO_USER" env DISPLAY="${DISPLAY:-:0}" XAUTHORITY="${XAUTHORITY:-/home/$SUDO_USER/.Xauthority}" java "$@"
+        # El flag -H fuerza a que el entorno cargue el $HOME del usuario real
+        sudo -H -u "$SUDO_USER" env DISPLAY="${DISPLAY:-:0}" XAUTHORITY="${XAUTHORITY:-/home/$SUDO_USER/.Xauthority}" java "$@"
     else
         java "$@"
     fi
