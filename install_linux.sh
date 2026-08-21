@@ -3,7 +3,40 @@
 
 set -Eeuo pipefail
 
-# 1. Absolute Path Resolution
+# ==========================================
+# 0. AUTO-BOOTSTRAP PARA EJECUCIÓN POR PIPE
+# ==========================================
+TARGET_DIR="/opt/Burpsuite-Professional"
+
+# Si BASH_SOURCE está vacío (piped) o no estamos en el repo válido, auto-instalamos.
+if [ -z "${BASH_SOURCE[0]:-}" ] || [ ! -d ".git" ] || [ ! -f "loader.jar" ]; then
+    echo "[!] Ejecución en memoria o entorno incompleto detectado."
+    echo "[*] Preparando el entorno de ejecución en $TARGET_DIR..."
+    
+    if ! command -v git &>/dev/null; then
+        if command -v apt &>/dev/null; then apt update && apt install -y git;
+        elif command -v pacman &>/dev/null; then pacman -S --noconfirm git;
+        elif command -v dnf &>/dev/null; then dnf install -y git;
+        else echo "[X] Error: Git no está instalado. Instálalo para continuar."; exit 1;
+        fi
+    fi
+
+    if [ ! -d "$TARGET_DIR" ]; then
+        mkdir -p "$TARGET_DIR"
+        git clone https://github.com/sPROFFEs/Burpsuite-Professional.git "$TARGET_DIR"
+    else
+        echo "[*] El directorio $TARGET_DIR ya existe. Actualizando..."
+        cd "$TARGET_DIR" && git pull || true
+    fi
+    
+    echo "[*] Transfiriendo ejecución al repositorio local..."
+    cd "$TARGET_DIR"
+    chmod +x install_linux.sh
+    exec bash ./install_linux.sh "$@"
+fi
+# ==========================================
+
+# 1. Absolute Path Resolution (Ahora 100% seguro de que está en disco)
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOADER_JAR="loader.jar"
 
@@ -42,6 +75,12 @@ function install_panel_launcher() {
     LAUNCHER_CMD="burpsuitepro"
     DESKTOP_FILE="burpsuite-professional.desktop"       
     APP_DIR="$HOME/.local/share/applications"
+    
+    # Si se ejecuta con sudo, instalar en el perfil del usuario real si existe SUDO_USER
+    if [ -n "${SUDO_USER:-}" ]; then
+        APP_DIR=$(su - "$SUDO_USER" -c "echo \$HOME/.local/share/applications")
+    fi
+    
     mkdir -p "$APP_DIR"
 
     cat > "$APP_DIR/$DESKTOP_FILE" << EOL
@@ -59,6 +98,10 @@ StartupWMClass=burpsuite-pro
 EOL
 
     chmod +x "$APP_DIR/$DESKTOP_FILE"
+    if [ -n "${SUDO_USER:-}" ]; then
+        chown "$SUDO_USER:$SUDO_USER" "$APP_DIR/$DESKTOP_FILE"
+    fi
+
     if command -v update-desktop-database &>/dev/null; then
         update-desktop-database "$APP_DIR" 2>/dev/null || true
     fi
@@ -70,12 +113,12 @@ function check_dependencies() {
     local PKG_MGR=""
     
     if command -v apt &>/dev/null; then
-        PKG_MGR="sudo apt install -y"
-        sudo apt update
+        PKG_MGR="apt install -y"
+        apt update
     elif command -v pacman &>/dev/null; then
-        PKG_MGR="sudo pacman -S --noconfirm"
+        PKG_MGR="pacman -S --noconfirm"
     elif command -v dnf &>/dev/null; then
-        PKG_MGR="sudo dnf install -y"
+        PKG_MGR="dnf install -y"
     else
         echo "Package manager not automatically supported. Please ensure git, axel, curl, and java are installed."
         return 0
@@ -93,7 +136,7 @@ function check_dependencies() {
         if command -v apt &>/dev/null; then
             local java_installed=false
             for java_version in openjdk-21-jre openjdk-17-jre openjdk-11-jre default-jre; do
-                if sudo apt install -y "$java_version" 2>/dev/null; then
+                if apt install -y "$java_version" 2>/dev/null; then
                     java_installed=true
                     break
                 fi
@@ -194,7 +237,7 @@ function install_burp() {
     fi
     
     if [ ! -f "$LOADER_JAR" ]; then
-        echo "Error: $LOADER_JAR is missing after repository sync!"
+        echo "Error: $LOADER_JAR is missing after repository sync! Verify the github repo."
         exit 1
     fi
     
@@ -220,7 +263,6 @@ function update_burp() {
     echo "Checking for updates..."
     cd "$BASE_DIR"
     
-    # Check what is the latest online vs what we have locally
     LATEST_JAR=$(get_burp_version)
     EXISTING_JAR=$(latest_local_jar)
     
@@ -247,7 +289,6 @@ function install_launcher() {
     temp_launcher=$(mktemp)
     echo "Installing launcher to $LAUNCHER_PATH..."
     
-    # 3. Dynamic Launcher: It will auto-detect the latest JAR every time it runs
     cat > "$temp_launcher" << EOL
 #!/bin/bash
 cd "${BASE_DIR}"
@@ -260,7 +301,7 @@ java ${JVM_ARGS[*]} -jar "${BASE_DIR}/\$DYNAMIC_JAR" "\$@"
 EOL
 
     chmod +x "$temp_launcher"
-    sudo mv "$temp_launcher" "$LAUNCHER_PATH" || {
+    mv "$temp_launcher" "$LAUNCHER_PATH" || {
         rm -f "$temp_launcher"
         return 1
     }
@@ -270,7 +311,7 @@ EOL
 function delete_launcher() {
     LAUNCHER_PATH="/usr/local/bin/burpsuitepro"
     if [ -f "$LAUNCHER_PATH" ]; then
-        sudo rm "$LAUNCHER_PATH"
+        rm "$LAUNCHER_PATH"
         echo "Launcher removed from $LAUNCHER_PATH."
     else
         echo "No launcher found at $LAUNCHER_PATH."
@@ -304,7 +345,7 @@ function run_burp() {
         exit 1
     fi
     echo "Executing Burp Suite Professional ($TARGET_JAR)..."
-    java "${JVM_ARGS[@]}" -jar "${TARGET_JAR}"
+    java "${JVM_ARGS[@]}" -jar "${TARGET_JAR}" &
 }
 
 function pause() {
