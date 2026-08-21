@@ -4,20 +4,20 @@
 set -Eeuo pipefail
 
 # ==========================================
-# 0. AUTO-BOOTSTRAP PARA EJECUCIÓN POR PIPE
+# 0. AUTO-BOOTSTRAP FOR PIPE EXECUTION
 # ==========================================
 TARGET_DIR="/opt/Burpsuite-Professional"
 
-# Si BASH_SOURCE está vacío (piped) o no estamos en el repo válido, auto-instalamos.
+# If BASH_SOURCE is empty (piped) or we are not in the valid repo, auto-install.
 if [ -z "${BASH_SOURCE[0]:-}" ] || [ ! -d ".git" ] || [ ! -f "loader.jar" ]; then
-    echo "[!] Ejecución en memoria o entorno incompleto detectado."
-    echo "[*] Preparando el entorno de ejecución en $TARGET_DIR..."
+    echo "[!] In-memory execution or incomplete environment detected."
+    echo "[*] Preparing execution environment in $TARGET_DIR..."
     
     if ! command -v git &>/dev/null; then
         if command -v apt &>/dev/null; then apt update && apt install -y git;
         elif command -v pacman &>/dev/null; then pacman -S --noconfirm git;
         elif command -v dnf &>/dev/null; then dnf install -y git;
-        else echo "[X] Error: Git no está instalado. Instálalo para continuar."; exit 1;
+        else echo "[X] Error: Git is not installed. Install it to continue."; exit 1;
         fi
     fi
 
@@ -25,18 +25,18 @@ if [ -z "${BASH_SOURCE[0]:-}" ] || [ ! -d ".git" ] || [ ! -f "loader.jar" ]; the
         mkdir -p "$TARGET_DIR"
         git clone https://github.com/sPROFFEs/Burpsuite-Professional.git "$TARGET_DIR"
     else
-        echo "[*] El directorio $TARGET_DIR ya existe. Actualizando..."
+        echo "[*] Directory $TARGET_DIR already exists. Updating..."
         cd "$TARGET_DIR" && git pull || true
     fi
     
-    echo "[*] Transfiriendo ejecución al repositorio local..."
+    echo "[*] Transferring execution to local repository..."
     cd "$TARGET_DIR"
     chmod +x install_linux.sh
     exec bash ./install_linux.sh "$@"
 fi
 # ==========================================
 
-# 1. Absolute Path Resolution (Ahora 100% seguro de que está en disco)
+# 1. Absolute Path Resolution (Safe for local execution)
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOADER_JAR="loader.jar"
 
@@ -76,7 +76,7 @@ function install_panel_launcher() {
     DESKTOP_FILE="burpsuite-professional.desktop"       
     APP_DIR="$HOME/.local/share/applications"
     
-    # Si se ejecuta con sudo, instalar en el perfil del usuario real si existe SUDO_USER
+    # If run with sudo, install to the real user's profile if SUDO_USER exists
     if [ -n "${SUDO_USER:-}" ]; then
         APP_DIR=$(su - "$SUDO_USER" -c "echo \$HOME/.local/share/applications")
     fi
