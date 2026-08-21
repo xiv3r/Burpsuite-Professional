@@ -47,7 +47,7 @@ JVM_ARGS=(
     "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED"
     "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED"
     "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED"
-    "-javaagent:\${LOADER_JAR}"
+    "-javaagent:${BASE_DIR}/${LOADER_JAR}"
     "-noverify"
 )
 
@@ -232,7 +232,7 @@ JVM_ARGS=(
     "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED"
     "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED"
     "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED"
-    "-javaagent:\${BASE_DIR}/\${LOADER_JAR}"
+    "-javaagent:\${LOADER_JAR}"
     "-noverify"
 )
 
