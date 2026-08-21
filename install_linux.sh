@@ -32,7 +32,7 @@ if [ -z "${BASH_SOURCE[0]:-}" ] || [ ! -d ".git" ] || [ ! -f "loader.jar" ]; the
     echo "[*] Transferring execution to local repository..."
     cd "$TARGET_DIR"
     chmod +x install_linux.sh
-    exec bash ./install_linux.sh "$@"
+    exec bash ./install_linux.sh "$@" < /dev/tty
 fi
 # ==========================================
 
@@ -247,13 +247,13 @@ function install_burp() {
     echo "Starting Burp Suite Professional..."
     run_burp
 
-    read -p "Do you want to install the global command 'burpsuitepro'? [Y/n] " install_cmd
+    read -p "Do you want to install the global command 'burpsuitepro'? [Y/n] " install_cmd < /dev/tty
     install_cmd=${install_cmd:-y}
     if [[ $install_cmd =~ ^[Yy] ]]; then install_launcher; fi
 
     desktop_env=$(detect_desktop_env)
     if [ "$desktop_env" != "unknown" ]; then
-        read -p "Do you want to create a desktop shortcut for $desktop_env? [Y/n] " create_shortcut
+        read -p "Do you want to create a desktop shortcut for $desktop_env? [Y/n] " create_shortcut < /dev/tty
         create_shortcut=${create_shortcut:-y}
         if [[ $create_shortcut =~ ^[Yy] ]]; then install_panel_launcher; fi
     fi
@@ -350,7 +350,7 @@ function run_burp() {
 
 function pause() {
     echo -e "\nPress Enter to continue..."
-    read -r
+    read -r < /dev/tty
 }
 
 function menu() {
@@ -367,7 +367,7 @@ function menu() {
     echo "8) Run Loader"
     echo "9) Exit"
     echo "----------------------------------------"
-    read -p "Choose an option [1-9]: " opt
+    read -p "Choose an option [1-9]: " opt < /dev/tty
     case $opt in
         1) install_burp; pause; menu ;;
         2) update_burp; pause; menu ;;
