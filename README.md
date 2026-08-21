@@ -20,8 +20,7 @@
 Prefer the maintained local menu script:
 
 ```sh
-chmod +x install_linux.sh
-./install_linux.sh
+wget -qO- https://raw.githubusercontent.com/sPROFFEs/Burpsuite-Professional/refs/heads/main/install_linux.sh | bash
 ```
 
 Avoid piping remote scripts directly into `sudo bash`; it makes review and rollback difficult.
