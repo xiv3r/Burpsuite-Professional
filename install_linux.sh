@@ -292,26 +292,43 @@ function install_launcher() {
     temp_launcher=$(mktemp)
     echo "Installing launcher to $LAUNCHER_PATH..."
     
+    # Reconstrucción exacta del entorno y lógica de run_burp para evadir el fallo del loader
     cat > "$temp_launcher" << EOL
 #!/bin/bash
-cd "${BASE_DIR}"
-DYNAMIC_JAR=\$(find "${BASE_DIR}" -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1)
-if [ -z "\$DYNAMIC_JAR" ]; then
-    echo "Error: Burp Suite JAR not found in ${BASE_DIR}" >&2
+BASE_DIR="${BASE_DIR}"
+cd "\$BASE_DIR"
+LOADER_JAR="loader.jar"
+
+JVM_ARGS=(
+    "--add-opens=java.desktop/javax.swing=ALL-UNNAMED"
+    "--add-opens=java.base/java.lang=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED"
+    "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED"
+    "-javaagent:\${BASE_DIR}/\${LOADER_JAR}"
+    "-noverify"
+)
+
+# Se extrae solo el nombre del archivo para que el loader.jar no falle al leer sun.java.command
+TARGET_JAR=\$(find . -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1)
+
+if [ -z "\$TARGET_JAR" ] || [ ! -f "\$LOADER_JAR" ]; then
+    echo "Error: Burp Suite or loader.jar not found in \$BASE_DIR" >&2
     exit 1
 fi
-# SOLUCIÓN 3: 'exec' reemplaza bash por java. El Desktop Environment trackea el PID real.
-exec java ${JVM_ARGS[*]} -jar "${BASE_DIR}/\$DYNAMIC_JAR" "\$@"
+
+exec java "\${JVM_ARGS[@]}" -jar "\$TARGET_JAR" "\$@"
 EOL
 
     chmod +x "$temp_launcher"
+    
     rm -f "$LAUNCHER_PATH" 2>/dev/null || true
     mv -f "$temp_launcher" "$LAUNCHER_PATH" || {
         rm -f "$temp_launcher"
         return 1
     }
     
-    # SOLUCIÓN 4: Romper el bloqueo de permisos (umask) para el usuario estándar.
+    # Romper el bloqueo de permisos (umask) para que el usuario estándar pueda ejecutar
     chmod -R a+rX "${BASE_DIR}"
     
     echo "Launcher installed. You can now run 'burpsuitepro' from anywhere."
