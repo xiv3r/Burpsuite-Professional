@@ -41,6 +41,7 @@ LOADER_JAR="loader.jar"
 
 BURP_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar"
 
+# Global array for the menu's internal execution
 JVM_ARGS=(
     "--add-opens=java.desktop/javax.swing=ALL-UNNAMED"
     "--add-opens=java.base/java.lang=ALL-UNNAMED"
@@ -53,10 +54,9 @@ JVM_ARGS=(
 
 REAL_USER="${SUDO_USER:-$USER}"
 
-# Función para ejecutar Java bajando los privilegios si se ejecuta como root
+# Privilege drop function to ensure Java stores keys in the correct user profile
 function run_java_as_user() {
     if [ "$USER" == "root" ] && [ -n "${SUDO_USER:-}" ]; then
-        # El flag -H fuerza a que el entorno cargue el $HOME del usuario real
         sudo -H -u "$SUDO_USER" env DISPLAY="${DISPLAY:-:0}" XAUTHORITY="${XAUTHORITY:-/home/$SUDO_USER/.Xauthority}" java "$@"
     else
         java "$@"
@@ -224,7 +224,6 @@ function install_launcher() {
 #!/bin/bash
 BASE_DIR="${BASE_DIR}"
 cd "\$BASE_DIR"
-LOADER_JAR="loader.jar"
 
 JVM_ARGS=(
     "--add-opens=java.desktop/javax.swing=ALL-UNNAMED"
@@ -232,14 +231,14 @@ JVM_ARGS=(
     "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED"
     "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED"
     "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED"
-    "-javaagent:\${LOADER_JAR}"
+    "-javaagent:\${BASE_DIR}/loader.jar"
     "-noverify"
 )
 
 TARGET_JAR=\$(find . -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1)
 
-if [ -z "\$TARGET_JAR" ] || [ ! -f "\$LOADER_JAR" ]; then
-    echo "Error: Burp Suite or loader.jar not found in \$BASE_DIR" >&2
+if [ -z "\$TARGET_JAR" ]; then
+    echo "Error: Burp Suite JAR not found in \$BASE_DIR" >&2
     exit 1
 fi
 
@@ -316,7 +315,6 @@ function update_burp() {
         rm -f "$EXISTING_JAR"
     fi
     
-    # Always regenerate the launcher upon update to fix perm issues
     install_launcher
     echo "Update complete."
 }
@@ -395,7 +393,6 @@ function menu() {
     esac
 }
 
-# Enforce root for installation/setup tasks, but standard user execution for Java.
 if [ "$EUID" -ne 0 ] && [ -z "${BASH_SOURCE[0]:-}" ]; then
    echo "[!] Run via sudo for full installation: wget ... | sudo bash"
 fi
