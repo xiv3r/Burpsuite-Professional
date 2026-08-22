@@ -10,6 +10,8 @@ TARGET_DIR="/opt/Burpsuite-Professional"
 
 if [ -z "${BASH_SOURCE[0]:-}" ] || [ ! -d ".git" ] || [ ! -f "loader.jar" ]; then
     echo "[!] In-memory execution or incomplete environment detected."
+    ORIGINAL_DIR="$PWD"
+    
     echo "[*] Preparing execution environment in $TARGET_DIR..."
     
     if ! command -v git &>/dev/null; then
@@ -26,6 +28,12 @@ if [ -z "${BASH_SOURCE[0]:-}" ] || [ ! -d ".git" ] || [ ! -f "loader.jar" ]; the
     else
         echo "[*] Directory $TARGET_DIR already exists. Updating..."
         cd "$TARGET_DIR" && git pull || true
+    fi
+    
+    # Rescate del loader.jar local si existe en el directorio de origen
+    if [ -f "$ORIGINAL_DIR/loader.jar" ]; then
+        echo "[*] Migrating local loader.jar to the isolated environment..."
+        cp "$ORIGINAL_DIR/loader.jar" "$TARGET_DIR/"
     fi
     
     echo "[*] Transferring execution to local repository..."
@@ -65,7 +73,8 @@ function run_java_as_user() {
 
 function get_burp_version() {
     local version_info
-    version_info=$(curl -fsSL -I "$BURP_URL" | grep -i "content-disposition" | grep -Eo "burpsuite_(pro|desktop)[^;\"[:space:]]*\.jar" | head -n1 | tr -d '\r\n' || true)
+    # Evasión del bloqueo 405 usando una petición GET en lugar de HEAD (-I)
+    version_info=$(curl -fsSL -D - -o /dev/null "$BURP_URL" | grep -i "content-disposition" | grep -Eo "burpsuite_(pro|desktop)[^;\"[:space:]]*\.jar" | head -n1 | tr -d '\r\n' || true)
     if [ -n "$version_info" ]; then
         printf "%s" "$version_info"
     else
@@ -273,7 +282,7 @@ function install_burp() {
     fi
     
     if [ ! -f "$LOADER_JAR" ]; then
-        echo "Error: $LOADER_JAR is missing after repository sync! Verify the github repo."
+        echo "Error: $LOADER_JAR is missing! Ensure it exists in $BASE_DIR before running."
         exit 1
     fi
     
