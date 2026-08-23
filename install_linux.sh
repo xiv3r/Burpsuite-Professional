@@ -1,5 +1,5 @@
 #!/bin/bash
-# Burp Suite Professional - Ultimate Centralized Menu
+# Burp Suite Professional - Modular Architecture Installer
 
 set -e
 
@@ -16,11 +16,9 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-# Extraer el usuario real que invocó sudo
 REAL_USER="${SUDO_USER:-$USER}"
 USER_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6)
 
-# Configuración de rutas deterministas
 REPO_URL="https://github.com/sPROFFEs/Burpsuite-Professional.git"
 INSTALL_DIR="/opt/Burpsuite-Professional"
 LOADER_JAR="loader.jar"
@@ -28,7 +26,7 @@ BIN_PATH="/usr/local/bin/burpsuitepro"
 BURP_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&type=Jar"
 
 # ==========================================
-# 2. FUNCIONES DEL SISTEMA
+# 2. MÓDULOS DEL NÚCLEO
 # ==========================================
 function install_dependencies() {
     echo ">> Instalando dependencias base..."
@@ -64,12 +62,15 @@ function get_local_jar() {
     find "$INSTALL_DIR" -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1
 }
 
+# ==========================================
+# 3. MÓDULOS DE LANZADORES (A DEMANDA)
+# ==========================================
 function create_global_launcher() {
     local target_jar
-    target_jar=$(find "$INSTALL_DIR" -maxdepth 1 -type f \( -name 'burpsuite_pro_*.jar' -o -name 'burpsuite_desktop_*.jar' \) -printf '%f\n' | sort -V | tail -n 1)
+    target_jar=$(get_local_jar)
 
     if [ -z "$target_jar" ]; then
-        echo "[!] Error: No se encontró el JAR de Burp en $INSTALL_DIR"
+        echo "[!] Error: No se encontró el JAR de Burp en $INSTALL_DIR. Instala primero."
         return 1
     fi
 
@@ -77,7 +78,6 @@ function create_global_launcher() {
     
     cat > "$BIN_PATH" << EOF
 #!/bin/bash
-# Ejecución estricta con rutas absolutas
 java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \\
      --add-opens=java.base/java.lang=ALL-UNNAMED \\
      --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED \\
@@ -89,6 +89,7 @@ java --add-opens=java.desktop/javax.swing=ALL-UNNAMED \\
 EOF
 
     chmod +x "$BIN_PATH"
+    echo "[+] Comando global creado en $BIN_PATH"
 }
 
 function create_desktop_shortcut() {
@@ -119,14 +120,22 @@ EOL
     if command -v update-desktop-database &>/dev/null; then
         update-desktop-database "$app_dir" 2>/dev/null || true
     fi
+    echo "[+] Acceso directo creado en el menú de aplicaciones."
+}
+
+function delete_launchers() {
+    echo ">> Eliminando lanzadores del sistema..."
+    rm -f "$BIN_PATH"
+    rm -f "${USER_HOME}/.local/share/applications/burpsuite-professional.desktop"
+    echo "[+] Lanzadores purgados."
 }
 
 # ==========================================
-# 3. LÓGICA DE EJECUCIÓN (PRIVILEGE DROP)
+# 4. LÓGICA DE EJECUCIÓN (PRIVILEGE DROP)
 # ==========================================
 function execute_keygen() {
     if [ ! -f "${INSTALL_DIR}/${LOADER_JAR}" ]; then
-        echo "[!] Error: ${LOADER_JAR} no existe. Instala primero."
+        echo "[!] Error: ${LOADER_JAR} no existe. Ejecuta la instalación principal."
         return
     fi
     echo ">> Arrancando Loader como usuario $REAL_USER..."
@@ -135,7 +144,7 @@ function execute_keygen() {
 
 function execute_burp() {
     if [ ! -f "$BIN_PATH" ]; then
-        echo "[!] Error: El lanzador no existe. Ejecuta la instalación."
+        echo "[!] Error: El lanzador no existe. Créalo usando la opción del menú."
         return
     fi
     echo ">> Arrancando Burp Suite como usuario $REAL_USER..."
@@ -143,7 +152,7 @@ function execute_burp() {
 }
 
 # ==========================================
-# 4. ACCIONES DEL MENÚ
+# 5. FLUJOS MAESTROS
 # ==========================================
 function install_full() {
     install_dependencies
@@ -164,6 +173,7 @@ function install_full() {
         fi
     fi
 
+    # Auto-generar lanzadores por defecto durante la instalación completa
     create_global_launcher
     create_desktop_shortcut
     
@@ -175,10 +185,9 @@ function install_full() {
 }
 
 function uninstall_all() {
-    echo ">> Purgando instalación del sistema..."
+    echo ">> Purgando instalación total del sistema..."
     rm -rf "$INSTALL_DIR"
-    rm -f "$BIN_PATH"
-    rm -f "${USER_HOME}/.local/share/applications/burpsuite-professional.desktop"
+    delete_launchers
     echo "[+] Sistema limpio."
 }
 
@@ -188,7 +197,7 @@ function pause() {
 }
 
 # ==========================================
-# 5. MENÚ PRINCIPAL
+# 6. MENÚ PRINCIPAL
 # ==========================================
 function show_menu() {
     while true; do
@@ -199,16 +208,24 @@ function show_menu() {
         echo "1) Instalar / Actualizar Completo"
         echo "2) Lanzar Burp Suite"
         echo "3) Lanzar Keygen (Activación Manual)"
-        echo "4) Purgar Instalación Total"
-        echo "5) Salir"
+        echo "----------------------------------------"
+        echo "4) Instalar Lanzador Global (Comando)"
+        echo "5) Instalar Acceso Directo (Escritorio)"
+        echo "6) Eliminar Lanzadores"
+        echo "----------------------------------------"
+        echo "7) Purgar Instalación Total"
+        echo "8) Salir"
         echo "========================================"
-        read -p "Elige una opción [1-5]: " opt < /dev/tty
+        read -p "Elige una opción [1-8]: " opt < /dev/tty
         case $opt in
             1) install_full; pause ;;
             2) execute_burp; pause ;;
             3) execute_keygen; pause ;;
-            4) uninstall_all; pause ;;
-            5) exit 0 ;;
+            4) create_global_launcher; pause ;;
+            5) create_desktop_shortcut; pause ;;
+            6) delete_launchers; pause ;;
+            7) uninstall_all; pause ;;
+            8) exit 0 ;;
             *) echo "Opción inválida."; pause ;;
         esac
     done
